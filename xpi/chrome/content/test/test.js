@@ -13,7 +13,7 @@ function withXHR(process, exp, responseText){
 			status : 200,
 			readyState : 4,
 			responseText : responseText,
-			
+
 			open : function(method, url, async, username, password){
 				this.method = method.toUpperCase();
 				if(this.method == 'GET')
@@ -22,7 +22,7 @@ function withXHR(process, exp, responseText){
 			send : function(text){
 				if(this.method != 'GET')
 					this.test(parseQueryString(text));
-				
+
 				this.onload(this);
 				this.onreadystatechange(this);
 			},
@@ -34,7 +34,7 @@ function withXHR(process, exp, responseText){
 			onload : function(req){},
 			onreadystatechange : function(req){},
 		};
-		
+
 		process();
 	} finally {
 		XMLHttpRequest = org;
@@ -50,7 +50,7 @@ function sameObject(act, exp, msg){
 		var exv = exp[p];
 		var acv = act[p];
 		var m = msg + ': ' + p;
-		
+
 		// 正規表現か
 		if(exv.test) {
 			ok(exv.test(acv), m);
@@ -69,13 +69,13 @@ function sameObject(act, exp, msg){
 
 function autoReload(paths){
 	paths = paths || [];
-	
+
 	var baseUri = IOService.newURI(location.href, null, null);
 	Array.forEach(document.getElementsByTagNameNS(XUL_NS,'script'), function(script){
 		var src = script.getAttribute('src');
 		if(!src)
 			return;
-		
+
 		paths.push(IOService.newURI(src, null, baseUri).spec);
 	})
 	Array.forEach(document.getElementsByTagName('script'), function(script){
@@ -85,17 +85,17 @@ function autoReload(paths){
 		style.href && paths.push(style.href);
 	})
 	paths.push(location.href);
-	
+
 	function getModifiedTime(path){
 		var file = getLocalFile(path);
 		return file? file.lastModifiedTime : 0;
 	}
-	
+
 	var original = {};
 	paths.forEach(function(path){
 		original[path] = getModifiedTime(path);
 	});
-	
+
 	var intervalId = setInterval(function(){
 		paths.forEach(function(path){
 			if(original[path] != getModifiedTime(path))
@@ -107,20 +107,20 @@ function autoReload(paths){
 function getTestFile(path){
 	var file = getContentDir();
 	file.append('test');
-	
+
 	if(path)
 		file.setRelativeDescriptor(file, path);
-	
+
 	return file;
 }
 
 function copy(src, target){
 	if(!src.exists())
 		return;
-	
+
 	remove(target);
 	src.copyTo(target.parent, target.leafName);
-	
+
 	return target;
 }
 

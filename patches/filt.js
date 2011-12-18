@@ -1,7 +1,7 @@
 (function(){
 	const TYPE_DOCUMENT = IContentPolicy.TYPE_DOCUMENT;
 	const REDIRECTION_LIMIT = getPrefValue('network.http.redirection-limit') || 20;
-	
+
 	// 初期化されていないか?
 	// (アプリケーションを通じて一度だけ通過する)
 	var filt = grobal.filt;
@@ -10,28 +10,28 @@
 	if(!filt){
 		var file = getPatchDir();
 		file.append('filt.txt');
-		
+
 		filt = grobal.filt = {
 			blackList : [],
 			debug : false,
 			file : file,
 		};
 		ObserverService.addObserver(filt, 'http-on-modify-request', false);
-		
+
 		setInterval(function(){
 			checked = {};
 		}, 3 * 60 * 1000);
-		
+
 		reloadList();
 	}
-	
+
 	// policyチェックが開始する前に起きる通信をブロックする
 	// (画像などで先読みが行われているよう)
 	filt.observe = function(subject, topic, data){
 		try{
 			var channel = subject.QueryInterface(IHttpChannel);
 			var url = channel.URI.spec;
-			
+
 			// リダイレクトしている場合はメインページとして開いているか元コンテンツなので通す
 			if(channel.referrer && (REDIRECTION_LIMIT == channel.redirectionLimit) && isBlock(url))
 				subject.cancel(Cr.NS_BINDING_ABORTED);
@@ -40,44 +40,44 @@
 			return;
 		}
 	};
-	
+
 	loadPolicies.push(function(contentType, contentLocation, requestOrigin, context, mimeTypeGuess, extra){
 		try{
 			// メインページとして開かれた場合は無条件に通す
 			var url = contentLocation.spec;
-			
+
 			if(contentType == TYPE_DOCUMENT)
 				return checked[url] = false;
-			
+
 			return isBlock(url);
 		}catch(e){
 			error(e);
 			return false;
 		}
 	});
-	
+
 	function isBlock(url){
 		if(disabled)
 			return;
-		
+
 		// observeかpolicyで処理済みか(または最近アクセスされ判定済みか)?
 		var res = checked[url];
 		if(res != null)
 			return res;
-		
+
 		var list = filt.blackList;
 		for(var i=0, len=list.length ; i<len ; i++){
 			if(list[i].test(url)){
 				if(filt.debug)
 					log([url, list[i]]);
-				
+
 				return checked[url] = true;;
 			}
 		}
-		
+
 		return checked[url] = false;
 	}
-	
+
 	function reloadList(){
 		// 重複定義を省く(複数のリストをマージするため)
 		var list = keys(getContents(filt.file).split(/[\n\r]+/).reduce(function(memo, r){
@@ -85,15 +85,15 @@
 				memo[r] = r;
 			return memo;
 		}, {})).sort();
-		
+
 		putContents(filt.file, list.join('\n') + '\n');
-		
+
 		checked = {};
 		filt.blackList = list.map(function(r){
 			return new RegExp(r);
 		});
 	}
-	
+
 	Tombloo.Service.actions.register({
 		name : 'filt',
 		type : 'menu',
@@ -115,7 +115,7 @@
 			},
 			{
 				name : 'Open List',
-				execute : partial(openInEditor, filt.file), 
+				execute : partial(openInEditor, filt.file),
 			},
 			{
 				name : 'Debug - On',
@@ -125,7 +125,7 @@
 				},
 				execute : function(){
 					filt.debug = !filt.debug;
-					
+
 					// デバッグをオンの場合はキャッシュをクリアして確認できるようにする
 					if(filt.debug)
 						checked = {};
@@ -141,7 +141,7 @@ connect(grobal, 'content-ready', function(win){
 	names.forEach(function(name){
 		win[name] = non;
 	});
-	
+
 	var pageTracker = {
 		_setDomainName : non,
 		_initData      : non,
@@ -154,11 +154,11 @@ connect(grobal, 'content-ready', function(win){
 		},
 	}
 	win.pageTracker = pageTracker;
-	
+
 	names.forEach(function(name){
 		sealProp(win, name);
 	});
-	
+
 	function sealProp(obj, prop){
 		Object.defineProperty(obj, prop, {
 			configurable : false,
@@ -166,7 +166,7 @@ connect(grobal, 'content-ready', function(win){
 			writable     : false,
 			value        : obj[prop],
 		});
-		
+
 		obj = obj[prop];
 		if(typeof(obj)=='object')
 			for(var prop in obj)

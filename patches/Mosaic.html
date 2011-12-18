@@ -47,7 +47,7 @@ body *{
 #control label{
 	color : white;
 }
-#control input, 
+#control input,
 #control select {
 	margin-right : 2em;
 }
@@ -122,13 +122,13 @@ body *{
 </body>
 <script type="text/javascript">
 	const PER = 1000;
-	
-	
+
+
 	// ---- [Main] ------------------------------------------------------
 	var params = parseQueryString(location.search);
-	
+
 	MosaicPanel($('mosaic'), params);
-	
+
 	var control = SlidePanel($('control'));
 	if(params.query){
 		control.hide();
@@ -136,32 +136,32 @@ body *{
 		control.show();
 	}
 	QueryForm($x('id("control")//form'), params);
-	
-	
+
+
 	// ---- [Application] ------------------------------------------------
 	function MosaicPanel(elmMosaic, params){
 		if(!params.user && !params.query)
 			return;
-		
+
 		var photos;
 		if(params.user){
 			photos = Tombloo.Photo.findByUser({
-				user : params.user, 
-				limit : (params.limit || PER), 
-				offset : (params.offset || 0), 
+				user : params.user,
+				limit : (params.limit || PER),
+				offset : (params.offset || 0),
 				order : (params.random? 'random()' : 'date DESC')});
 		} else {
 			// .split(',')
 			photos = Tombloo.Photo.find(params.query, params.args);
 		}
-		
+
 		deferredForEach(photos.split(25), function(photos){
 			photos.forEach(function(photo){
 				var file = photo.getFile(75);
-				
+
 				if(!file.exists())
 					return;
-				
+
 				var img = new Image();
 				img.src = createURI(file).spec;
 				img.photo = photo;
@@ -169,13 +169,13 @@ body *{
 					elmMosaic.appendChild(img);
 				}
 			})
-			
+
 			return wait(0);
 		});
-		
+
 		var magnifyPanel = MagnifyPanel(elmMosaic);
 		var style = elmMosaic.style;
-		
+
 		// サムネイル単位のスクロール
 		var thmbs = elmMosaic.getElementsByTagName('img');
 		function scroll(next){
@@ -185,10 +185,10 @@ body *{
 			var borderWidth = parseInt(getStyle(thmbs[0], 'borderTopWidth'));
 			var margin = top - borderWidth;
 			for(
-				var columns=0; 
+				var columns=0;
 				columns<len && top == thmbs[columns].offsetTop ;
 				columns++);
-			
+
 			var border = document.body.scrollTop + margin;
 			for(var i=len ; i>=0 ; i-=columns){
 				var elm = thmbs[next ? len-i : i-1];
@@ -197,13 +197,13 @@ body *{
 			}
 			document.body.scrollTop = elm.offsetTop - margin;
 		}
-		
+
 		// ズーム
 		elmMosaic.style.fontSize='60%';
 		function Zoomer(target, base){
 			var margin = target.offsetTop - document.body.scrollTop;
 			style.cursor='e-resize';
-			
+
 			return {
 				terminate : function(){
 					style.cursor='';
@@ -211,20 +211,20 @@ body *{
 				zoom : function(current){
 					// 拡大縮小
 					var direction = current.x>base.x? 1 : -1;
-					var fontSize = 
-						parseInt(style.fontSize) + 
+					var fontSize =
+						parseInt(style.fontSize) +
 						Math.floor(Math.hypot(current.x - base.x, current.y - base.y) / 5) * direction;
 					fontSize = Math.min(Math.max(fontSize, 20), 200);
 					style.fontSize = fontSize + '%';
-					
+
 					// スクロール位置を戻す
 					document.body.scrollTop = target.offsetTop - margin;
-					
+
 					base = current;
 				},
 			}
 		}
-		
+
 		// イベント処理
 		var pushing = 0;
 		var zoomer;
@@ -239,7 +239,7 @@ body *{
 		connect(elmMosaic, 'onmousedown', function(e){
 			var button = 1<<e.event().button;
 			pushing = pushing | button;
-			
+
 			if(button == 1){
 				magnifyPanel.show(e);
 				e.stop();
@@ -250,7 +250,7 @@ body *{
 		connect(document, 'onmouseup', function(e){
 			var button = 1<<e.event().button;
 			pushing -= pushing & button;
-			
+
 			if(button == 1){
 				magnifyPanel.hide();
 			} else if(button == 4){
@@ -266,14 +266,14 @@ body *{
 			}
 		});
 	}
-	
+
 	function MagnifyPanel(elmParent){
 		var elmMagnify = getElement('magnify');
 		var elmPhoto;
 		var border = parseInt(getStyle(elmMagnify, 'borderTopWidth')) * 2;
 		var style = elmMagnify.style;
 		var body = document.body;
-		
+
 		var panel = {
 			get visible(){
 				return style.display = 'block';
@@ -282,19 +282,19 @@ body *{
 				var target = e.target();
 				if(!target.photo)
 					return;
-				
+
 				// [FIXME] 判定
 				elmMagnify.src = createURI(target.photo.getFile(500)).spec;
 				style.display = 'block';
 				elmParent.style.cursor='-moz-zoom-in';
-				
+
 				var mouse = e.mouse();
 				var vp = getViewportPosition();
 				var vd = getViewportDimensions();
 				var mp = mouse.page;
-				
+
 				var zh = elmMagnify.height;
-				
+
 				// マウスが画面右半分にあるか?
 				if(vd.w/2 < mp.x){
 					style.left = 'auto';
@@ -303,7 +303,7 @@ body *{
 					style.left = mp.x + border;
 					style.right = '';
 				}
-				
+
 				style.top = mp.y - zh - border < vp.y ? vp.y : mp.y - zh - border;
 			},
 			hide : function(){
@@ -315,11 +315,11 @@ body *{
 			}
 		}
 		panel.limitSize();
-		
+
 		// イベント処理
 		connect(window,     'onresize',    panel, 'limitSize');
 		connect(elmMagnify, 'onmouseover', panel, 'hide');
-		
+
 		return panel;
 	}
 </script>

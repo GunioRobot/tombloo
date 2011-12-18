@@ -7,7 +7,7 @@
 window.addEventListener('load', function() {
 	var w = unsafeWindow;
 	var RE = /((anonym\.to|share|mediafire|send|upload|rapidspread|link-protector)|(zip|mp3)$)/;
-	
+
 	w.Keybind.add('ctrl+C', function(){
 		var hash = {};
 		var urls = [];
@@ -17,10 +17,10 @@ window.addEventListener('load', function() {
 					hash[l] = true;
 			});
 		});
-		
+
 		for(var url in hash)
 			urls.push(url);
-		
+
 		GM_Tombloo.notify('Collect File Links', 'Links: ' + urls.length);
 		GM_Tombloo.copyString(urls.join('\n'));
 	});

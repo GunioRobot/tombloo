@@ -10,7 +10,7 @@ popup {
 	-moz-binding: url("chrome://tombloo/content/completion.xml#popup");
 	padding: 0;
  	cursor: pointer;
-	
+
 	border: 1px solid ThreeDShadow;
 	-moz-border-top-colors: ThreeDShadow;
 	-moz-border-right-colors: ThreeDShadow;

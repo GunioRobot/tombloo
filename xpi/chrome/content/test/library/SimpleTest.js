@@ -5,7 +5,7 @@
  *
  * Test.Simple doesn't work on IE < 6.
  * TODO:
- *  * Support the Test.Simple API used by MochiKit, to be able to test MochiKit 
+ *  * Support the Test.Simple API used by MochiKit, to be able to test MochiKit
  * itself against IE 5.5
  *
 **/
@@ -110,7 +110,7 @@ SimpleTest.showReport = function() {
 	var toggleFailed = A({'href': '#'}, "Toggle failed tests");
 	togglePassed.onclick = partial(SimpleTest.toggleByClass, 'test_ok');
 	toggleFailed.onclick = partial(SimpleTest.toggleByClass, 'test_not_ok');
-	
+
 	var body = document.getElementsByTagName("body")[0];
 	var firstChild = body.childNodes[0];
 	var addNode;
@@ -123,11 +123,11 @@ SimpleTest.showReport = function() {
 			body.appendChild(el)
 		};
 	}
-	
+
 	toggles.appendChild(togglePassed);
 	toggles.appendChild(SPAN(null, " "));
 	toggles.appendChild(toggleFailed);
-	
+
 	addNode(toggles);
 	addNode(SimpleTest.report());
 };
@@ -144,11 +144,11 @@ SimpleTest.waitForExplicitFinish = function () {
 };
 
 /**
- * Talks to the TestRunner if being ran on a iframe and the parent has a 
+ * Talks to the TestRunner if being ran on a iframe and the parent has a
  * TestRunner object.
 **/
 SimpleTest.talkToRunner = function () {
-	var chromeWindow = 
+	var chromeWindow =
 		Components.classes["@mozilla.org/appshell/window-mediator;1"].
 			getService(Components.interfaces.nsIWindowMediator).
 			getMostRecentWindow("navigator:browser");
@@ -159,7 +159,7 @@ SimpleTest.talkToRunner = function () {
 };
 
 /**
- * Finishes the tests. This is automatically called, except when 
+ * Finishes the tests. This is automatically called, except when
  * SimpleTest.waitForExplicitFinish() has been invoked.
 **/
 SimpleTest.finish = function () {
@@ -327,7 +327,7 @@ SimpleTest._formatStack = function (stack) {
 
 	out += vars[0] + ' = ' + vals[0] + SimpleTest.LF;
 	out += vars[1] + ' = ' + vals[1] + SimpleTest.LF;
-	
+
 	return '	' + out;
 };
 

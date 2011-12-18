@@ -7,13 +7,13 @@ Tombloo.Service.actions = new Repository([
 			// GitHubでかつraw以外のリンクの場合は除外する
 			// FIXME: より簡易にインストールできるように
 			var url = ctx.linkURL;
-			return ctx.onLink && 
-				(createURI(url).fileExtension == 'js') && 
+			return ctx.onLink &&
+				(createURI(url).fileExtension == 'js') &&
 				!(/github\.com/.test(url) && !/\/raw\//.test(url));
 		},
 		execute : function(ctx){
 			var self = this;
-			
+
 			// ファイルタイプを取得しチェックする
 			var url;
 			return request(ctx.linkURL).addCallback(function(res){
@@ -21,24 +21,24 @@ Tombloo.Service.actions = new Repository([
 					alert(getMessage('message.install.invalid'));
 					return;
 				}
-				
+
 				var res = input({
 					'message.install.warning' : null,
 					'label.install.agree' : false,
 				}, 'message.install.warning');
 				if(!res || !res['label.install.agree'])
 					return;
-				
+
 				return download(ctx.linkURL, getPatchDir()).addCallback(function(file){
 					// 異常なスクリプトが含まれているとここで停止する
 					reload();
-					
+
 					notify(self.name, getMessage('message.install.success'), notify.ICON_INFO);
 				});
 			});
 		},
 	},
-	
+
 	{
 		type : 'menu,context',
 		name : getMessage('label.action.changeAcount'),
@@ -68,19 +68,19 @@ if(AppShellService.hiddenDOMWindow.PicLensContext){
 			var user = (users.length<=1)? users[0] : input({'User' : users});
 			if(!user)
 				return;
-			
+
 			var photos = Tombloo.Photo.findByUser({
-				user   : user, 
-				limit  : 1000, 
-				offset : 0, 
+				user   : user,
+				limit  : 1000,
+				offset : 0,
 				order  : 'date DESC', // 'random()'
 			});
-			
+
 			// E4Xを使うコードに比べて30倍程度高速
 			var items = [];
 			photos.forEach(function(photo){
 				var imegeUri = createURI(photo.getFile(500)).asciiSpec;
-				items.push('<item>' + 
+				items.push('<item>' +
 						'<title>' + photo.body.trimTag() + '</title>' +
 						'<link>' + photo.url + '</link>' +
 						'<guid>' + photo.id + '</guid>' +
@@ -89,13 +89,13 @@ if(AppShellService.hiddenDOMWindow.PicLensContext){
 					'</item>'
 				);
 			});
-			
+
 			var file = getTempDir('photos.rss');
-			putContents(file, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + 
+			putContents(file, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
 				'<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss"><channel>' +
 					items.join('') +
  				'</channel></rss>');
-			
+
 			// hiddenDOMWindowを使うとFirefoxがクラッシュした
 			// ガベージのことも考慮しコンテンツのウィンドウを利用する
 			// location以外の実行では開始されなかった(PicLensの相対パス解決などと関係あり)

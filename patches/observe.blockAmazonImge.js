@@ -3,9 +3,9 @@ if(grobal.BlockAmazonImge)
 
 grobal.BlockAmazonImge = {
 	observe : function(subject, topic, data) {
-		(subject instanceof Ci.nsIHttpChannel) && 
-			/images-amazon\.com/.test(subject.URI.host) && 
-			!/amazon\./.test(subject.referrer.host) && 
+		(subject instanceof Ci.nsIHttpChannel) &&
+			/images-amazon\.com/.test(subject.URI.host) &&
+			!/amazon\./.test(subject.referrer.host) &&
 			subject.cancel(Cr.NS_ERROR_FAILURE);
 	}
 };

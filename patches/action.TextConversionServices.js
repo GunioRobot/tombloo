@@ -11,7 +11,7 @@ TextConversionServices.getServices().addCallback(function(services){
 			},
 		});
 	});
-	
+
 	Tombloo.Service.actions.register( {
 		name : 'Text Conversion Services',
 		type : 'context',

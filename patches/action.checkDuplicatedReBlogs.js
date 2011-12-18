@@ -3,10 +3,10 @@ Tombloo.Service.actions.register({
 	execute : function(){
 		var params = {
 			query : Entity.compactSQL(<>
-				SELECT id, user, imageId 
-				FROM photos 
+				SELECT id, user, imageId
+				FROM photos
 				WHERE user=:user
-				GROUP BY user, imageId 
+				GROUP BY user, imageId
 				HAVING count(*)>1
 			</>),
 			args : prompt('Target user:'),

@@ -18,18 +18,18 @@
 <script type="text/javascript; version=1.8">
 try {
 	// chrome://tombloo/content/test/test_model.html
-	
-	
+
+
 	SimpleTest.waitForExplicitFinish();
-	
+
 	var d = succeed();
-	
+
 	/*
 	.addBoth(function(res){
 		log(res);
 	})
 	*/
-	
+
 	/*
 	// 絶対復習
 	d.addCallback(function(){
@@ -45,22 +45,22 @@ try {
 		return models['絶対復習'].add('件名', '詳細', ['tag1', 'tag2']);
 	})
 	*/
-	
-	
+
+
 	/*
 	// GoogleCalendar
 	d.addCallback(function(){
 		return GoogleCalendar.addSimpleSchedule('開発 2009/5/10');
 	});
-	
+
 	ok(GoogleCalendar.getAuthCookie());
-	
+
 	d.addCallback(function(){
 		return GoogleCalendar.addSchedule('開発', '詳細', new Date('2009/5/10'));
 	});
 	*/
-	
-	
+
+
 	/*
 	// TextConversionServices
 	d.addCallback(function(){
@@ -68,15 +68,15 @@ try {
 	}).addCallback(function(res){
 		is(res, 'パピパポプ ');
 	});
-	
+
 	d.addCallback(function(){
 		return TextConversionServices.convert('ありがとう', '大阪弁');
 	}).addCallback(function(res){
 		is(res, 'おおきに');
 	});
 	*/
-	
-	
+
+
 	/*
 	// is.gd
 	d.addCallback(function(){
@@ -84,15 +84,15 @@ try {
 	}).addCallback(function(url){
 		is(url, 'http://is.gd/Rt');
 	});
-	
+
 	d.addCallback(function(){
 		return models['is.gd'].expand('http://is.gd/Rt');
 	}).addCallback(function(url){
 		is(url, 'http://www.example.com/');
 	});
 	*/
-	
-	
+
+
 	/*
 	// bit.ly
 	d.addCallback(function(){
@@ -105,7 +105,7 @@ try {
 	}).addCallback(function(url){
 		is(url, 'http://cnn.com/');
 	});
-	
+
 	d.addCallback(function(){
 		return models['j.mp'].shorten('http://cnn.com/');
 	}).addCallback(function(url){
@@ -117,8 +117,8 @@ try {
 		is(url, 'http://cnn.com/', 'j.mp: expand');
 	});
 	*/
-	
-	
+
+
 	/*
 	// FriendFeed
 	d.addCallback(function(){
@@ -131,8 +131,8 @@ try {
 		});
 	});
 	*/
-	
-	
+
+
 	/*
 	// Instapaper
 	d.addCallback(function(){
@@ -143,8 +143,8 @@ try {
 		});
 	});
 	*/
-	
-	
+
+
 	/*
 	// YahooBookmarks
 	YahooBookmarks.post({
@@ -155,21 +155,21 @@ try {
 		tags        : ['search', 'portal'],
 		private     : true,
 	});
-	
+
 	d.addCallback(function(){
 		return YahooBookmarks.getSuggestions('http://www.hatena.ne.jp/');
 	});
 	d.addCallback(function(res){
 		log(res);
-		
+
 		ok(res.tags.length);
 		ok(res.popular.length);
-		
+
 		var tag = res.tags[0];
 		ok(tag.name.length > 0, 'YahooBookmarks: タグの名前を取得できているか');
 	});
 	*/
-	
+
 	/*
 	// Yahoo
 	d.addCallback(function(){
@@ -183,8 +183,8 @@ try {
 		is(res.join(''), '"shashinn","atodeyomu"');
 	});
 	*/
-	
-	
+
+
 	/*
 	// Kawa
 	d.addCallback(function(){
@@ -193,7 +193,7 @@ try {
 		log(res);
 	});
 	*/
-	
+
 	// Hatena
 	/*
 	d.addCallback(function(){
@@ -202,39 +202,39 @@ try {
 	d.addCallback(function(){
 		return Hatena.logout();
 	});
-	
+
 	d.addCallback(function(){
 		return Hatena.getCurrentUser();
 	}).addCallback(function(user){
 		ok(user, 'Hatena.getCurrentUser');
 	});
-	
+
 	d.addCallback(function(){
 		return Hatena.getToken();
 	}).addCallback(function(token){
 		ok(token, 'Hatena.getToken');
 	});
 	*/
-	
+
 	/*
 	// HatenaBookmark
 	ok(Hatena.getPasswords().length, 'Hatena: アカウント情報を取得できているか');
 	ok(Hatena.getAuthCookie(), 'Hatena: ログインしているか(未ログインの場合エラー)');
-	
+
 	d.addCallback(function(){
 		return HatenaBookmark.getToken();
 	}).addCallback(function(token){
 		log(token);
 		ok(token);
 	});
-	
+
 	d.addCallback(function(){
 		return HatenaBookmark.getSuggestions('http://jp.msn.com/');
 	}).addCallback(function(res){
 		ok(res.tags.length, 'HatenaBookmark.getSuggestions(tags)');
 		ok(res.recommended.length, 'HatenaBookmark.getSuggestions(recommended)');
 	});
-	
+
 	d.addCallback(bind('post', HatenaBookmark), {
 		itemUrl     : 'http://dictionary.goo.ne.jp/',
 		description : '辞書',
@@ -244,8 +244,8 @@ try {
 		ok(true, 'HatenaBookmark: 追加');
 	});
 	*/
-	
-	
+
+
 	/*
 	// HatenaStar
 	d.addCallback(function(){
@@ -263,8 +263,8 @@ try {
 		});
 	})
 	*/
-	
-	
+
+
 	/*
 	// GoogleBookmarks
 	d.addCallback(function(){
@@ -276,8 +276,8 @@ try {
 		});
 	})
 	*/
-	
-	
+
+
 	/*
 	// Twitter
 	d.addCallback(function(){
@@ -286,7 +286,7 @@ try {
 	d.addCallback(function(token){
 		ok(token.authenticity_token > 3);
 	});
-	
+
 	d.addCallback(function(){
 		return Twitter.addFavorite(808614559);
 	});
@@ -297,7 +297,7 @@ try {
 			description : 'ポータルサイト',
 		});
 	});
-	
+
 	d.addCallback(function(){
 		return Twitter.remove(847473592);
 	});
@@ -309,8 +309,8 @@ try {
 		ok(recipients[0].name);
 	});
 	*/
-	
-	
+
+
 	/*
 	//Plurk
 	d.addCallback(function(){
@@ -322,8 +322,8 @@ try {
 		log(res);
 	});
 	*/
-	
-	
+
+
 	/*
 	// Pinboard
 	d.addCallback(function(){
@@ -334,7 +334,7 @@ try {
 			tags        : ['search', 'portal', 'test'],
 		});
 	});
-	
+
 	d.addCallback(function(){
 		return Pinboard.getUserTags();
 	});
@@ -342,14 +342,14 @@ try {
 		var tag = tags[0];
 		ok(tag.name.length > 0, 'Pinboard: タグの名前を取得できているか');
 	});
-	
+
 	d.addCallback(function(){
 		return Pinboard.getRecommendedTags('http://tumblr.com/');
 	});
 	d.addCallback(function(tags){
 		ok(tags, 'Pinboard: お勧めタグが取得できるか');
 	});
-	
+
 	d.addCallback(function(){
 		return Pinboard.getSuggestions('http://msn.com/');
 	});
@@ -358,8 +358,8 @@ try {
 		ok(suggestions.recommended);
 	});
 	*/
-	
-	
+
+
 	/*
 	// Delicious
 	d.addCallback(function(){
@@ -371,7 +371,7 @@ try {
 			private     : true,
 		});
 	});
-	
+
 	d.addCallback(bind('getUserTags', Delicious));
 	d.addCallback(function(tags){
 		// 2011/9/28 Delicious移行に伴って動作せず(フィード再開待ち)
@@ -379,14 +379,14 @@ try {
 		ok(tag.name.length > 0, 'Delicious: タグの名前を取得できているか');
 		ok(tag.frequency!=null, 'Delicious: タグの利用回数を取得できているか');
 	});
-	
+
 	d.addCallback(function(){
 		return Delicious.getSuggestions('http://techcrunch.com/');
 	});
 	d.addCallback(function(suggestions){
 		ok(suggestions.recommended.length, 'Delicious: お勧めタグなどが取得できるか');
 	});
-	
+
 	d.addCallback(function(){
 		return Delicious.getCurrentUser();
 	});
@@ -394,8 +394,8 @@ try {
 		ok(user, 'Delicious: ログイン中のユーザー名を取得できるか(JSON取得)');
 	});
 	*/
-	
-	
+
+
 	/*
 	// GoogleWebHistory
 	d.addCallback(bind('post', GoogleWebHistory), 'http://google.com/');
@@ -404,20 +404,20 @@ try {
 	});
 	*/
 	is(GoogleWebHistory.getCh('http://google.com'), '6-1226505498');
-	
-	
+
+
 	/*
 	// Flickr
 	d.addCallback(bind('addFavorite', Flickr), 2371304094);
 	d.addCallback(function(){
 		ok(true, 'Flickr Favorite 追加');
 	});
-	
+
 	d.addCallback(bind('removeFavorite', Flickr), 2371304094);
 	d.addCallback(function(){
 		ok(true, 'Flickr Favorite 削除');
 	});
-	
+
 	d.addCallback(bind('getInfo', Flickr), 2052869076);
 	d.addCallback(function(info){
 		is(info.title._content, 'Mya');
@@ -427,7 +427,7 @@ try {
 		is(info.originalsecret, 'a02938d5af');
 		is(info.secret,         'd7852e1a0b');
 		is(info.server,         '2106');
-		
+
 		is(info.urls.url[0].type,     'photopage');
 		is(info.urls.url[0]._content, 'http://www.flickr.com/photos/benpearce/2052869076/');
 	});
@@ -444,15 +444,15 @@ try {
 	d.addErrback(function(e){
 		is(e.message, 'Photo not found');
 	});
-	
+
 	d.addCallback(function(){
 		return Flickr.getToken();
 	}).addCallback(function(token){
 		ok(token);
 	});
-	
+
 	ok(Flickr.getAuthCookie(), 'Flickr: ログインしているか(未ログインの場合エラー)');
-	
+
 	d.addCallback(function(){
 		return Flickr.post({
 			file    : getLocalFile('chrome://tombloo/skin/quote.png'),
@@ -463,7 +463,7 @@ try {
 	}).addCallback(function(id){
 		ok(id, 'Flickr: メタ情報を付加してアップロード');
 	});
-	
+
 	d.addCallback(function(){
 		return Flickr.upload({
 			file : getLocalFile(Flickr.ICON),
@@ -472,15 +472,15 @@ try {
 		is(err.message, 'Filetype was not recognised', 'Flickr: アップロードエラーメッセージの確認');
 	});
 	*/
-	
-	
+
+
 	/*
 	// FFFFOUND
 	d.addCallback(bind('getToken', FFFFOUND));
 	d.addCallback(function(token){
 		ok(token);
 	});
-	
+
 	d.addCallback(bind('post', FFFFOUND), {
 		item    : 'はてな',
 		itemUrl : 'http://www.hatena.ne.jp/images/top/navi_icon.gif',
@@ -496,24 +496,24 @@ try {
 	}).addCallbacks(partial(ok, false), function(e){
 		is(e.message, 'UNSUPPORTED_TYPE', 'ポスト失敗: サポート外のタイプ')
 	});
-	
+
 	d.addCallback(bind('post', FFFFOUND), {
 		item    : 'Mya',
 		itemUrl : 'http://farm3.static.flickr.com/2106/2052869076_a02938d5af_o.jpg',
 		pageUrl : 'http://www.flickr.com/photos/benpearce/2052869076/sizes/o/',
 	});
-	
+
 	d.addCallback(bind('remove', FFFFOUND), 159182);
-	
+
 	d.addCallback(bind('iLoveThis', FFFFOUND), 159322);
 	d.addCallback(bind('iLoveThis', FFFFOUND), 159322).addCallbacks(
-		partial(ok, false), 
+		partial(ok, false),
 		function(e){
 			is(e.message, 'EXISTS', 'ポスト失敗: 重複')
 		});
 	*/
-	
-	
+
+
 	/*
 	// Wassr
 	d.addCallback(function(){
@@ -524,8 +524,8 @@ try {
 		});
 	});
 	*/
-	
-	
+
+
 	/*
 	// Jaiku
 	d.addCallback(function(){
@@ -535,27 +535,27 @@ try {
 			description : 'ポータルサイト',
 		});
 	});
-	
+
 	ok(Jaiku.getCurrentUser().length > 1, 'Jaiku: ユーザー名を取得できるか(未ログインの場合エラー)');
 	*/
-	
+
 	is(Gyazo.getId().length, 14);
-	
+
 	/*
 	Mento
 	d.addCallback(function(){
 		return Mento.save({
-			title       : 'goo 辞書', 
-			url         : 'http://dictionary.goo.ne.jp/', 
+			title       : 'goo 辞書',
+			url         : 'http://dictionary.goo.ne.jp/',
 			image       : 'http://www.goo.ne.jp/img2/logo/gh_logo2.gif',
-			tags        : ['便利', 'dictionary', 'english'], 
+			tags        : ['便利', 'dictionary', 'english'],
 			description : '辞書',
 			private     : false,
 		});
 	});
 	*/
-	
-	
+
+
 	/*
 	//LibraryThing
 	d.addCallback(function(){
@@ -564,8 +564,8 @@ try {
 		});
 	});
 	*/
-	
-	
+
+
 	/*
 	d.addCallback(function(){
 		return models['Sharebee.com'].decrypt('0028a325');
@@ -574,8 +574,8 @@ try {
 		ok(res.fileName);
 	});
 	*/
-	
-	
+
+
 	/*
 	d.addCallback(function(){
 		return LivedoorClip.getToken();
@@ -594,7 +594,7 @@ try {
 			tags        : ['便利', 'dictionary', 'english'],
 		});
 	});
-	
+
 	d.addCallback(function(){
 		return LivedoorClip.getSuggestions('http://www.hatena.ne.jp/');
 	});
@@ -603,7 +603,7 @@ try {
 	});
 	ok(LivedoorClip.getAuthCookie(), 'LivedoorClip: ログインしているか(未ログインの場合エラー)');
 	*/
-	
+
 	/*
 	// 8tracks
 	d.addCallback(function(){
@@ -612,19 +612,19 @@ try {
 	d.addCallback(function(token){
 		ok(token);
 	});
-	
+
 	d.addCallback(function(){
 		return models['8tracks'].getPlaylist(26179);
 	});
 	d.addCallback(function(list){
 		is(list.length, 15);
-		
+
 		var track = list[0];
 		is(track.mixName, '!!!may.tyo!!!');
 		is(track.mixDescription, 'tokyo');
 		is(track.photo, 'http://cf3.8tracks.us/mix_covers/000/026/179/26235.sq56.jpg');
 		is(track.referenceUrl, 'http://8tracks.com/isbsh/maytyo');
-		
+
 		ok(/^http.*\.mp3/.test(track.item));
 		ok(track.title);
 		ok(track.trackId);
@@ -632,8 +632,8 @@ try {
 		is(track.allowSkip, 'true');
 	});
 	*/
-	
-	
+
+
 	// FirefoxBookmark
 	var uri = 'chrome://tombloo/content/prefs.xul';
 	var title = 'Tombloo 設定画面';
@@ -643,52 +643,52 @@ try {
 		uri : uri,
 		description : description,
 	};
-	
+
 	FirefoxBookmark.addBookmark(uri, title, ['tombloo', 'chrome'], description);
 	sameObject(FirefoxBookmark.getBookmark(uri), params, 'FirefoxBookmark: ブックマークの追加');
 	ok(FirefoxBookmark.isBookmarked(uri));
-	
+
 	FirefoxBookmark.removeBookmark(uri);
 	ok(!FirefoxBookmark.getBookmark(uri), 'FirefoxBookmark: ブックマークの削除');
 	ok(!FirefoxBookmark.isBookmarked(uri));
-	
+
 	FirefoxBookmark.addBookmark(params);
 	ok(FirefoxBookmark.isBookmarked(uri), 'FirefoxBookmark: ブックマークの追加(ハッシュ形式)');
 	FirefoxBookmark.removeBookmark(uri);
-	
+
 	FirefoxBookmark.createFolder('TEST', NavBookmarksService.bookmarksMenuFolder);
-	
+
 	var folderId = FirefoxBookmark.getFolder('TEST', NavBookmarksService.bookmarksMenuFolder);
 	ok(folderId, 'FirefoxBookmark: フォルダの作成');
 	FirefoxBookmark.removeItem(folderId);
 	folderId = FirefoxBookmark.getFolder('TEST');
 	ok(! folderId, 'FirefoxBookmark: フォルダの削除/フォルダIDの省略');
-	
-	
+
+
 	// NDrive
 	is(NDrive.incrementFile('/test(2).jpg'), '/test(3).jpg');
 	is(NDrive.incrementFile('test(100).jpg'), 'test(101).jpg');
 	is(NDrive.incrementFile('te.st(100).jpg'), 'te.st(101).jpg');
 	is(NDrive.incrementFile('test(2)'), 'test(3)');
 	is(NDrive.incrementFile('/a/b/c/test(2)'), '/a/b/c/test(3)');
-	
+
 	is(NDrive.incrementFile('test'), 'test(2)');
 	is(NDrive.incrementFile('test.jpg'), 'test(2).jpg');
 	is(NDrive.incrementFile('/a/b/c/test'), '/a/b/c/test(2)');
 	is(NDrive.incrementFile('/a/b/c/test.jpg'), '/a/b/c/test(2).jpg');
 	is(NDrive.incrementFile('/a.1/b.2/c.3/te.st.jpg'), '/a.1/b.2/c.3/te.st(2).jpg');
-	
+
 	is(NDrive.validateFileName('<t|e:s/t>.jpg'), '(t-e-s-t).jpg');
 	is(NDrive.validateFileName('"t\\e?s*t".jpg'), "'t-e-s-t'.jpg");
-	
-	
+
+
 	// Soundcloud
 	var url = 'http://soundcloud.com/user/track';
 	is(Soundcloud.normalizeTrackUrl(url), url);
 	is(Soundcloud.normalizeTrackUrl(url + '/'), url);
 	is(Soundcloud.normalizeTrackUrl(url + '/download'), url);
-	
-	
+
+
 	d.addErrback(function(e){
 		error(e.message);
 		ok(false, '遅延テストエラー');
@@ -696,14 +696,14 @@ try {
 	d.addBoth(function(){
 		SimpleTest.finish()
 	});
-	
+
 } catch (err) {
 	var s = [];
 	s.push('TEST SUITE FAILURE!');
 	for(var prop in err)
 		s.push(prop + ':  ' + err[prop]);
 	ok(false, s.join('\n'));
-	
+
 	SimpleTest.finish()
 }
 </script>

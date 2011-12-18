@@ -5,14 +5,14 @@ function QueryForm(elmForm, params){
 		Tombloo.Photo.findUsers().map(function(user){
 			return OPTION({value:user}, user);
 		}))
-	
+
 	populateForm(elmForm, params);
-	
+
 	// イベント処理
 	var submit = bind('submit', elmForm);
 	$x('//input[@name="random"]', elmForm).onchange = submit;
 	elmUser.onchange = submit;
-	
+
 	// ページバーの作成
 	var entries = params.random? 0 : Tombloo.Photo.countByUser(params);
 	if(entries){
@@ -23,7 +23,7 @@ function QueryForm(elmForm, params){
 			max : 10,
 		});
 		insertSiblingNodesBefore(elmForm.childNodes[0], pagebar);
-		
+
 		var elmOffset = $x('//input[@name="offset"]', elmForm);
 		elmOffset.value=0;
 		connect(pagebar, 'onChange', function(e){
@@ -65,7 +65,7 @@ function SlidePanel(elmPanel){
 		hovering = false;
 		focusing || panel.drawBack();
 	}, true);
-	
+
 	return panel;
 }
 
@@ -74,28 +74,28 @@ function Pagebar(opt){
 	var total = Math.ceil(opt.entries/opt.per);
 	opt.max = opt.max || opt.entries;
 	var step = total <= opt.max ? 1 : total/opt.max;
-	
+
 	var tds = <></>;
 	var pages = {};
 	for(var i=1 ; i<total ; i+=step)
 		pages[Math.ceil(i)]=true;
 	pages[opt.current] = pages[total] = true;
-	
+
 	if(opt.current!=1)
 		tds+=<td class="pagination" value={opt.current-1}></td>
-	
+
 	keys(pages).sort(function(a,b){return a-b}).forEach(function(page){
 		tds+=<td class={(page==opt.current)? 'current' : ''} value={page}>{page}</td>
 	})
-	
+
 	if(opt.current!=total)
 		tds+=<td class="pagination" value={opt.current+1}></td>
-	
+
 	var elmPagebar = convertToDOM(<table id="pagebar"><tr>{tds}</tr></table>);
 	connect(elmPagebar, 'onclick', function(e){
 		var target = e.target();
 		if(hasElementClass(target, 'current')) return;
-		
+
 		signal(elmPagebar, 'onChange', target.getAttribute('value'));
 	})
 	return elmPagebar;
@@ -105,7 +105,7 @@ function Pagebar(opt){
 var QuickPostForm = {
 	show : function(ps, position, message){
 		openDialog(
-			'chrome://tombloo/content/quickPostForm.xul', 
+			'chrome://tombloo/content/quickPostForm.xul',
 			'chrome,alwaysRaised=yes,resizable=yes,dependent=yes,titlebar=no', ps, position, message);
 	},
 };
@@ -123,7 +123,7 @@ QuickPostForm.descriptionContextMenus = [
 	{
 		name : 'j.mp',
 		icon : models['j.mp'].ICON,
-		
+
 		execute : function(elmText, desc){
 			shortenUrls(desc.value, models['j.mp']).addCallback(function(value){
 				desc.value = value;
@@ -138,10 +138,10 @@ var shortcutkeys = {};
 forEach({
 	'shortcutkey.quickPost.link' : function(e){
 		cancel(e);
-		
+
 		var win = getMostRecentWindow().content;
 		var doc = win.document;
-		
+
 		var ctx = update({
 			document  : doc,
 			window    : win,
@@ -149,12 +149,12 @@ forEach({
 			selection : ''+win.getSelection(),
 			target    : doc.documentElement,
 		}, win.location);
-		
+
 		var exts = Tombloo.Service.check(ctx).filter(function(ext){
 			return /^Link/.test(ext.name);
 		});
 		Tombloo.Service.extractors.extract(
-			ctx, 
+			ctx,
 			exts[0]
 		).addCallback(function(ps){
 			QuickPostForm.show(ps);
@@ -162,26 +162,26 @@ forEach({
 	},
 	'shortcutkey.quickPost.regular' : function(e){
 		cancel(e);
-		
+
 		var win = wrappedObject(e.currentTarget.content);
 		var doc = win.document;
-		
+
 		QuickPostForm.show({
 			type    : 'regular',
 			page    : doc.title,
 			pageUrl : win.location.href,
 		});
 	},
-	
+
 	// 処理を行わなかった場合はtrueを返す
 	'shortcutkey.checkAndPost' : function(e){
 		var doc = e.originalTarget.ownerDocument;
 		var win = wrappedObject(doc.defaultView);
-		
+
 		// XULは処理しない
 		if(!doc.body)
 			return true;
-		
+
 		var ctx = update({
 			document  : doc,
 			window    : win,
@@ -195,13 +195,13 @@ forEach({
 		}, win.location);
 
 		var ext = Tombloo.Service.check(ctx)[0];
-		
+
 		// FIXME: xul:popup要素の使用を検討
 		var tip = doc.createElement('div');
 		tip.setAttribute('style', ''+<>
 			font-family        : 'Arial Black', Arial, sans-serif;
 			font-size          : 12px;
-			
+
 			color              : #666;
 			background         : #EEEEEE no-repeat;
 			position           : fixed;
@@ -211,7 +211,7 @@ forEach({
 			line-height        : 16px;
 			vertical-align     : middle;
 			overflow           : hidden;
-			
+
 			-moz-border-radius : 4px;
 			border             : 4px solid #EEE;
 			padding-left       : 20px;
@@ -231,7 +231,7 @@ forEach({
 				},
 			});
 		}, 250);
-		
+
 		Tombloo.Service.share(ctx, ext, ext.name.match(/^Link/));
 	},
 }, function([key, func]){
@@ -247,9 +247,9 @@ forEach({
 connect(grobal, 'browser-load', function(e){
 	var cwin = e.target.defaultView;
 	var doc = cwin.document;
-	
+
 	connectToBrowser(cwin);
-	
+
 	var top = getPref('contextMenu.top');
 	var context;
 	var menuContext = doc.getElementById('contentAreaContextMenu');
@@ -257,13 +257,13 @@ connect(grobal, 'browser-load', function(e){
 	var menuSelect  = doc.getElementById('tombloo-menu-select');
 	var menuAction  = doc.getElementById('tombloo-menu-action');
 	var separator = doc.createElement('menuseparator');
-	
+
 	menuShare.setAttribute('accesskey', getPref('accesskey.share'));
-	
+
 	if(top) {
 		insertSiblingNodesAfter(menuAction.parentNode, separator);
 	}
-	
+
 	var menuEditor;
 	var extensionId = '{EDA7B1D7-F793-4e03-B074-E6F303317FB0}';
 	if(FuelApplication && FuelApplication.extensions){
@@ -278,22 +278,22 @@ connect(grobal, 'browser-load', function(e){
 	menuContext.addEventListener('popupshowing', function(e){
 		if(e.eventPhase != Event.AT_TARGET || (context && context.target == cwin.gContextMenu.target))
 			return;
-		
+
 		var doc = wrappedObject(cwin.gContextMenu.target.ownerDocument);
 		var win = wrappedObject(doc.defaultView);
 		try{
 			win.location.host;
-			
+
 			menuShare.disabled = false;
 			menuSelect.parentNode.disabled = false;
 		}catch(e){
 			// about:config などのページで無効にする
 			menuShare.disabled = true;
 			menuSelect.parentNode.disabled = true;
-			
+
 			return;
 		}
-		
+
 		// command時にはクリック箇所などの情報が失われるためコンテキストを保持しておく
 		context = update({}, cwin.gContextMenu, win.location, {
 			document  : doc,
@@ -307,17 +307,17 @@ connect(grobal, 'browser-load', function(e){
 			},
 			menu      : cwin.gContextMenu,
 		});
-		
+
 		var exts = Tombloo.Service.check(context);
 		menuShare.label = 'Share - ' + exts[0].name;
 		menuShare.extractor = exts[0].name;
 		menuShare.setAttribute('image', exts[0].ICON || 'chrome://tombloo/skin/empty.png');
-		
+
 		if(exts.length<=1){
 			menuSelect.parentNode.disabled = true;
 		} else {
 			menuSelect.parentNode.disabled = false;
-			
+
 			for(var i=0 ; i<exts.length ; i++){
 				var ext = exts[i];
 				var elmItem = appendMenuItem(menuSelect, ext.name, ext.ICON || 'chrome://tombloo/skin/empty.png');
@@ -325,7 +325,7 @@ connect(grobal, 'browser-load', function(e){
 				elmItem.showForm = true;
 			}
 		}
-		
+
 		// Menu Editorが有効になっている場合は衝突を避ける(表示されなくなる)
 		if(!top && !menuEditor){
 			// リンク上とそれ以外で表示されるメニューが異なる
@@ -335,7 +335,7 @@ connect(grobal, 'browser-load', function(e){
 				insertPoint = cwin.document.getElementById(id);
 				return insertPoint && !insertPoint.hidden;
 			});
-			
+
 			// 表示される逆順に移動する
 			insertSiblingNodesAfter(insertPoint, separator);
 			insertSiblingNodesAfter(insertPoint, menuAction.parentNode);
@@ -343,71 +343,71 @@ connect(grobal, 'browser-load', function(e){
 			insertSiblingNodesAfter(insertPoint, menuShare);
 		}
 	}, true);
-	
+
 	menuContext.addEventListener('popuphidden', function(e){
 		if(e.eventPhase != Event.AT_TARGET)
 			return;
-		
+
 		context = null;
-		
+
 		clearChildren(menuSelect);
 		clearChildren(menuAction);
 	}, true);
-	
+
 	menuAction.addEventListener('popupshowing', function(e){
 		if(e.eventPhase != Event.AT_TARGET)
 			return;
-		
+
 		// メニュー生成済みなら返る
 		if(menuAction.childNodes.length)
 			return;
-		
+
 		createActionMenu(menuAction, context);
 	}, true);
-	
+
 	menuContext.addEventListener('command', function(e){
 		var target = e.target;
 		if(target.extractor){
 			var svc = Tombloo.Service;
 			svc.share(context, svc.extractors[target.extractor], target.showForm);
-			
+
 			return;
 		}
-		
+
 		if(target.action){
 			withWindow(context.window, function(){
 				target.action.execute(context);
 			});
-			
+
 			return;
 		}
 	}, true);
-	
+
 	// clickイベントはマウス座標が異常
 	menuContext.addEventListener('mousedown', function(e){
 		if(!e.target.extractor && !e.target.action)
 			return;
-		
+
 		context.originalEvent = e;
 		context.mouse.post = {
-			x : e.screenX, 
+			x : e.screenX,
 			y : e.screenY
 		}
 	}, true);
-	
+
 	var menuMain = doc.getElementById('tombloo-menu-main');
 	menuMain.addEventListener('popupshowing', function(e){
 		if(e.eventPhase != Event.AT_TARGET)
 			return;
-		
+
 		clearChildren(menuMain);
 		createActionMenu(menuMain);
 	}, true);
-	
+
 	menuMain.addEventListener('command', function(e){
 		e.target.action.execute(context);
 	}, true);
-	
+
 	function createActionMenu(root, ctx){
 		var doc = root.ownerDocument;
 		var df = doc.createDocumentFragment();
@@ -418,20 +418,20 @@ connect(grobal, 'browser-load', function(e){
 				// 後方互換のためtypeが未指定のものはメニューバーとして扱う
 				if(parent==df && !type.test(action.type || 'menu'))
 					return;
-				
+
 				// ブラウザメニューから実行された場合はコンテキストが渡されない
 				// extractorの動作を同じにするためwithWindow内でアクションを実行する
 				if(action.check && (
-					(!ctx)? 
-						!action.check() : 
+					(!ctx)?
+						!action.check() :
 						!withWindow(ctx.window, function(){
 							return action.check(ctx);
 						})))
 					return;
-				
+
 				var elmItem = appendMenuItem(parent, action.name, action.icon, !!action.children);
 				elmItem.action = action;
-				
+
 				if(action.children)
 					me(action.children, elmItem.appendChild(doc.createElement('menupopup')));
 			});
@@ -448,34 +448,34 @@ function connectToBrowser(win){
 	var hooked = Tombloo.hooked = (Tombloo.hooked || {});
 	var tabbrowser = win.getBrowser();
 	var version = parseFloat(AppInfo.version);
-	
+
 	if(!hooked.contentReady && connected(grobal, 'content-ready')){
 		constant.tabWatcher = constant.tabWatcher || new TabWatcher();
 		constant.tabWatcher.watchWindow(win);
 		hooked.contentReady = true;
 	}
-	
+
 	// ショートカットキーが設定されているか？
 	if(!hooked.shortcutkey && !isEmpty(shortcutkeys)){
 		win.addEventListener('keydown', function(e){
 			var key = shortcutkeys[keyString(e)];
 			if(!key)
 				return;
-			
+
 			// Shift + Tなどをテキストエリアで入力できるように
 			if((e.ctrlKey || e.altKey) || !(/(input|textarea)/i).test(e.target.tagName))
 				key.execute(e);
 		}, true);
 		hooked.shortcutkey = true;
 	}
-	
+
 	// マウスショートカットが設定されているか？
 	if(!hooked.mouseShortcut && keys(shortcutkeys).some(function(key){return key.indexOf('_DOWN')!=-1})){
 		observeMouseShortcut(win, function(e, key){
 			key = shortcutkeys[key];
 			if(!key)
 				return true;
-			
+
 			return key.execute(e);
 		});
 		hooked.mouseShortcut = true;
@@ -491,13 +491,13 @@ connect(grobal, 'environment-load', function(){
 		CategoryManager.deleteCategoryEntry('content-policy', grobal.NAME, false);
 		return;
 	}
-	
+
 	grobal.shouldLoad = function(contentType, contentLocation, requestOrigin, context, mimeTypeGuess, extra){
 		// ロードをキャンセルするポリシーをチェックする
 		for(var i=0,len=loadPolicies.length ; i<len ; i++)
 			if(loadPolicies[i](contentType, contentLocation, requestOrigin, context, mimeTypeGuess, extra))
 				return IContentPolicy.REJECT_SERVER;
-		
+
 		return IContentPolicy.ACCEPT;
 	}
 });

@@ -4,11 +4,11 @@ Tombloo.Service.extractors = new Repository([
 		getItem : function(ctx, getOnly){
 			if(ctx.host != 'reader.livedoor.com' && ctx.host != 'fastladder.com')
 				return;
-			
+
 			var item  = $x('ancestor-or-self::div[starts-with(@id, "item_count")]', ctx.target);
 			if(!item)
 				return;
-			
+
 			var channel = $x('id("right_body")/div[@class="channel"]//a');
 			var res = {
 				author : ($x('div[@class="item_info"]/*[@class="author"]/text()', item) || '').extract(/by (.*)/),
@@ -16,18 +16,18 @@ Tombloo.Service.extractors = new Repository([
 				feed   : channel.textContent,
 				href   : $x('(div[@class="item_info"]/a)[1]/@href', item).replace(/[?&;](fr?(om)?|track|ref|FM)=(r(ss(all)?|df)|atom)([&;].*)?/,'') || channel.href,
 			};
-			
+
 			var uri = createURI(res.href);
 			if(!getOnly){
 				ctx.title = res.feed + (res.title? ' - ' + res.title : '');
 				ctx.href  = res.href;
 				ctx.host  = uri.host;
 			}
-			
+
 			return res
 		},
 	},
-	
+
 	{
 		name : 'Quote - LDR',
 		ICON : 'http://reader.livedoor.com/favicon.ico',
@@ -41,7 +41,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'ReBlog - LDR',
 		ICON : 'http://reader.livedoor.com/favicon.ico',
@@ -58,7 +58,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name: 'ReBlog - Clipp',
 		ICON: 'http://clipp.in/favicon.ico',
@@ -69,7 +69,7 @@ Tombloo.Service.extractors = new Repository([
 			var link = this.getLink(ctx);
 			if(!link)
 				return {};
-			
+
 			var self = this;
 			var endpoint = Clipp.CLIPP_URL + 'bookmarklet' + link;
 			return Clipp.getForm(endpoint).addCallback(function(form) {
@@ -125,7 +125,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		}
 	},
-	
+
 	{
 		name : 'Photo - LDR(FFFFOUND!)',
 		ICON : 'http://reader.livedoor.com/favicon.ico',
@@ -138,10 +138,10 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			var item = Tombloo.Service.extractors.LDR.getItem(ctx);
 			ctx.title = item.title;
-			
+
 			with(createURI(ctx.href))
 				ctx.href = prePath + filePath;
-			
+
 			return {
 				type      : 'photo',
 				item      : item.title,
@@ -155,7 +155,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Photo - LDR',
 		ICON : 'http://reader.livedoor.com/favicon.ico',
@@ -169,7 +169,7 @@ Tombloo.Service.extractors = new Repository([
 			return exts.check(ctx)[0].extract(ctx);
 		},
 	},
-	
+
 	{
 		name : 'Link - LDR',
 		ICON : 'http://reader.livedoor.com/favicon.ico',
@@ -183,34 +183,34 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'GoogleReader',
 		getItem : function(ctx, getOnly){
 			if(!ctx.href.match('//www.google.[^/]+/reader/'))
 				return;
-			
+
 			var item  = $x('ancestor-or-self::div[contains(concat(" ",@class," ")," entry ")]', ctx.target);
 			if(!item)
 				return;
-			
+
 			var res = {
 				author : ($x('descendant::div[@class="entry-author"]/*[@class="entry-author-name"]/text()', item) || ''),
 				title  : $x('descendant::a[@class="entry-title-link"]/text()', item) || '',
 				feed   : ($x('descendant::a[@class="entry-source-title"]/text()', item) || $x('id("chrome-stream-title")//a/text()')),
 				href   : $x('descendant::a[@class="entry-title-link"]/@href', item).replace(/[?&;](fr?(om)?|track|ref|FM)=(r(ss(all)?|df)|atom)([&;].*)?/,''),
 			};
-			
+
 			if(!getOnly){
 				ctx.title = res.feed + (res.title? ' - ' + res.title : '');
 				ctx.href  = res.href;
 				ctx.host  = res.href.match('http://(.*?)/')[1];
 			}
-			
+
 			return res
 		},
 	},
-	
+
 	{
 		name : 'Quote - GoogleReader',
 		ICON : 'http://www.google.com/reader/ui/favicon.ico',
@@ -224,7 +224,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'ReBlog - GoogleReader',
 		ICON : 'http://www.google.com/reader/ui/favicon.ico',
@@ -241,7 +241,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - GoogleReader(FFFFOUND!)',
 		ICON : 'http://www.google.com/reader/ui/favicon.ico',
@@ -254,10 +254,10 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			var item = Tombloo.Service.extractors.GoogleReader.getItem(ctx);
 			ctx.title = item.title;
-			
+
 			with(createURI(ctx.href))
 				ctx.href = prePath + filePath;
-			
+
 			return {
 				type      : 'photo',
 				item      : item.title,
@@ -271,7 +271,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Photo - GoogleReader',
 		ICON : 'http://www.google.com/reader/ui/favicon.ico',
@@ -285,7 +285,7 @@ Tombloo.Service.extractors = new Repository([
 			return exts.check(ctx)[0].extract(ctx);
 		},
 	},
-	
+
 	{
 		name : 'Link - GoogleReader',
 		ICON : 'http://www.google.com/reader/ui/favicon.ico',
@@ -299,7 +299,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Quote - Twitter',
 		ICON : models.Twitter.ICON,
@@ -311,8 +311,8 @@ Tombloo.Service.extractors = new Repository([
 				type     : 'quote',
 				item     : ctx.title.substring(0, ctx.title.indexOf(': ')),
 				itemUrl  : ctx.href,
-				body     : createFlavoredString(ctx.selection? 
-					ctx.window.getSelection() : 
+				body     : createFlavoredString(ctx.selection?
+					ctx.window.getSelection() :
 					ctx.document.querySelector('.tweet-text-large') || ctx.document.querySelector('.entry-content')),
 				favorite : {
 					name : 'Twitter',
@@ -321,7 +321,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Quote - inyo.jp',
 		ICON : 'chrome://tombloo/skin/quote.png',
@@ -333,19 +333,19 @@ Tombloo.Service.extractors = new Repository([
 				type     : 'quote',
 				item     : $x('//span[@class="title"]/text()'),
 				itemUrl  : ctx.href,
-				body     : createFlavoredString((ctx.selection)? 
+				body     : createFlavoredString((ctx.selection)?
 					ctx.window.getSelection() : $x('//blockquote[contains(@class, "text")]/p')),
 			}
 		},
 	},
-	
+
 	{
 		name : 'Amazon',
 		getAsin : function(ctx){
 			return $x('id("ASIN")/@value');
 		},
 		normalizeUrl : function(host, asin){
-			return  'http://' + host + '/o/ASIN/' + asin + 
+			return  'http://' + host + '/o/ASIN/' + asin +
 				(this.affiliateId ? '/' + this.affiliateId + '/ref=nosim' : '');
 		},
 		get affiliateId(){
@@ -359,42 +359,42 @@ Tombloo.Service.extractors = new Repository([
 			var date = new Date(ctx.document.body.innerHTML.extract('発売日：.*?</b>.*?([\\d/]+)'));
 			if(!isNaN(date))
 				ctx.date = date;
-			
+
 			ctx.href = this.normalizeUrl(ctx.host, this.getAsin(ctx));
-			
+
 			var elmTitle = $x('id("btAsinTitle")');
 			if(!elmTitle)
 				return
-			
+
 			var authors = $x([
 				'id("handleBuy")/div[@class="buying"]/span//a/text()',
 				'id("handleBuy")/div[@class="buying"]/a/text()'
 			].join('|'), currentDocument(), true);
-			
-			ctx.title = 'Amazon: ' + 
-				elmTitle.textContent + 
+
+			ctx.title = 'Amazon: ' +
+				elmTitle.textContent +
 				(authors.length? ': ' + authors.join(', ') : '');
 		},
 	},
-	
+
 	{
 		name : 'Photo - Amazon',
 		ICON : 'http://www.amazon.com/favicon.ico',
 		check : function(ctx){
-			return Tombloo.Service.extractors.Amazon.preCheck(ctx) && 
+			return Tombloo.Service.extractors.Amazon.preCheck(ctx) &&
 				($x('./ancestor::*[@id="prodImageCell" or @id="prodImageOuter"]', ctx.target) || ctx.target.id == 'magnifierLens');
 		},
 		extract : function(ctx){
 			Tombloo.Service.extractors.Amazon.extract(ctx);
-			
+
 			// 拡大レンズなど画像以外の要素か?
 			if(!ctx.target.src)
 				ctx.target = $x('id("prodImageCell")/img | id("main-image")');
-			
+
 			var url = ctx.target.src.split('.');
 			url.splice(-2, 1, 'LZZZZZZZ');
 			url = url.join('.').replace('.L.LZZZZZZZ.', '.L.'); // カスタマーイメージ用
-			
+
 			with(ctx.target){
 				src = url
 				height = '';
@@ -402,7 +402,7 @@ Tombloo.Service.extractors = new Repository([
 				style.height = 'auto';
 				style.width = 'auto';
 			}
-			
+
 			return {
 				type    : 'photo',
 				item    : ctx.title,
@@ -410,7 +410,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Quote - Amazon',
 		ICON : 'http://www.amazon.com/favicon.ico',
@@ -438,7 +438,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'ReBlog',
 		extractByLink : function(ctx, link){
@@ -447,16 +447,16 @@ Tombloo.Service.extractors = new Repository([
 				var doc = convertToHTMLDocument(res.responseText);
 				ctx.href = link;
 				ctx.title = ($x('//title/text()', doc) || '').replace(/[\n\r]/g, '');
-				
+
 				return self.extractByPage(ctx, doc);
 			});
 		},
-		
+
 		extractByPage : function(ctx, doc){
       var m = unescapeHTML(this.getFrameUrl(doc)).match(/.+&pid=([^&]*)&rk=([^&]*)/);
 			return this.extractByEndpoint(ctx, Tumblr.TUMBLR_URL+'reblog/' + m[1] + '/' + m[2]);
 		},
-		
+
 		extractByEndpoint : function(ctx, endpoint){
 			var self = this;
 			return Tumblr.getForm(endpoint).addCallback(function(form){
@@ -472,11 +472,11 @@ Tombloo.Service.extractors = new Repository([
 				}, self.convertToParams(form));
 			})
 		},
-		
+
 		getFrameUrl : function(doc){
 			return $x('//iframe[starts-with(@src, "http://assets.tumblr.com/iframe") and contains(@src, "pid=")]/@src', doc);
 		},
-		
+
 		convertToParams	: function(form){
 			switch(form['post[type]']){
 			case 'regular':
@@ -485,32 +485,32 @@ Tombloo.Service.extractors = new Repository([
 					item    : form['post[one]'],
 					body    : form['post[two]'],
 				}
-			
+
 			case 'photo':
 				return {
 					itemUrl : form.image,
 					body    : form['post[two]'],
 				}
-			
+
 			case 'link':
 				return {
 					item    : form['post[one]'],
 					itemUrl : form['post[two]'],
 					body    : form['post[three]'],
 				};
-			
+
 			case 'quote':
 				// FIXME: post[two]検討
 				return {
 					body    : form['post[one]'],
 				};
-			
+
 			case 'video':
 				// FIXME: post[one]検討
 				return {
 					body    : form['post[two]'],
 				};
-			
+
 			case 'conversation':
 				return {
 					item : form['post[one]'],
@@ -519,7 +519,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'ReBlog - Tumblr',
 		ICON : 'chrome://tombloo/skin/reblog.ico',
@@ -530,7 +530,7 @@ Tombloo.Service.extractors = new Repository([
 			return Tombloo.Service.extractors.ReBlog.extractByPage(ctx, currentDocument());
 		},
 	},
-	
+
 	{
 		name : 'ReBlog - Dashboard',
 		ICON : 'chrome://tombloo/skin/reblog.ico',
@@ -543,12 +543,12 @@ Tombloo.Service.extractors = new Repository([
 		},
 		getLink : function(ctx){
 			var link = $x(
-				'./ancestor-or-self::li[starts-with(normalize-space(@class), "post")]' + 
+				'./ancestor-or-self::li[starts-with(normalize-space(@class), "post")]' +
 				'//a[starts-with(@id,"permalink_")]', ctx.target);
 			return link && link.href;
 		},
 	},
-	
+
 	{
 		name: 'ReBlog - Tumblr Dashboard for iPhone',
 		ICON: 'chrome://tombloo/skin/reblog.ico',
@@ -563,7 +563,7 @@ Tombloo.Service.extractors = new Repository([
 			return link && link.href;
 		}
 	},
-	
+
 	{
 		name : 'ReBlog - Mosaic',
 		ICON : 'chrome://tombloo/skin/reblog.ico',
@@ -574,7 +574,7 @@ Tombloo.Service.extractors = new Repository([
 			return Tombloo.Service.extractors.ReBlog.extractByLink(ctx, ctx.target.photo.url);
 		},
 	},
-	
+
 	{
 		name : 'ReBlog - Tumblr link',
 		ICON : 'chrome://tombloo/skin/reblog.ico',
@@ -585,12 +585,12 @@ Tombloo.Service.extractors = new Repository([
 			return Tombloo.Service.extractors.ReBlog.extractByLink(ctx, ctx.link.href);
 		},
 	},
-	
+
 	{
 		name : 'Photo - Ameba blog',
 		ICON : 'chrome://tombloo/skin/photo.png',
 		check : function(ctx){
-			return ctx.onLink && 
+			return ctx.onLink &&
 				ctx.host == ('ameblo.jp') &&
 				ctx.onImage &&
 				ctx.target.src.match(/\/t[0-9]+_/);
@@ -603,11 +603,11 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Photo - Flickr',
 		ICON : models.Flickr.ICON,
-		
+
 		RE : new RegExp('^http://(?:.+?.)?static.flickr.com/\\d+?/(\\d+?)_.*'),
 		getImageId : function(ctx){
 			// 他サイトに貼られているFlickrにも対応する
@@ -615,17 +615,17 @@ Tombloo.Service.extractors = new Repository([
 				// ログインしているとphoto-drag-proxyが前面に表示される
 				// アノテーション上の場合はphoto_notesの孫要素となる
 				if(
-					(ctx.target.src && ctx.target.src.match('spaceball.gif')) || 
-					ctx.target.id == 'photo-drag-proxy' || 
+					(ctx.target.src && ctx.target.src.match('spaceball.gif')) ||
+					ctx.target.id == 'photo-drag-proxy' ||
 					$x('./ancestor-or-self::div[@id="photo-drag-proxy"]', ctx.target)
 				){
 					ctx.target = $x('//div[@class="photo-div"]/img') || ctx.target;
 				}
 			}
-			
+
 			if(!ctx.target || !ctx.target.src || !ctx.target.src.match(this.RE))
 				return;
-			
+
 			return RegExp.$1;
 		},
 		check : function(ctx){
@@ -639,14 +639,14 @@ Tombloo.Service.extractors = new Repository([
 			}).addCallback(function(r){
 				if(!r.info[0])
 					throw new Error(r.info[1].message);
-				
+
 				var info = r.info[1];
 				var sizes = r.sizes[1];
-				
+
 				var title = info.title._content;
 				ctx.title = title + ' on Flickr'
 				ctx.href  = info.urls.url[0]._content;
-				
+
 				return {
 					type      : 'photo',
 					item      : title,
@@ -663,19 +663,19 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - Google Book Search',
 		ICON : models.Google.ICON,
 		check : function(ctx){
 			if(!(/^books.google./).test(ctx.host))
 				return;
-			
+
 			return !!this.getImage(ctx);
 		},
 		extract : function(ctx){
 			ctx.target = this.getImage(ctx);
-			
+
 			return Tombloo.Service.extractors['Photo - Upload from Cache'].extract(ctx);
 		},
 		getImage : function(ctx){
@@ -683,22 +683,22 @@ Tombloo.Service.extractors = new Repository([
 			var img = $x('./ancestor::div[@class="pageImageDisplay"]//img[contains(@src, "//books.google.")]', ctx.target);
 			if(img)
 				return img;
-			
+
 			// HTMLモード
 			var div = $x('./ancestor::div[@class="html_page_image"]', ctx.target);
 			if(div){
 				var img = new Image();
 				img.src = getStyle(div, 'background-image').replace(/url\((.*)\)/, '$1');
-				
+
 				return img;
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Kiva',
 		check : function(ctx){
-			return (ctx.onImage && this.isOriginalUrl(ctx.target.src)) || 
+			return (ctx.onImage && this.isOriginalUrl(ctx.target.src)) ||
 				(ctx.onLink && this.isOriginalUrl(ctx.link.href));
 		},
 		extract : function(ctx){
@@ -715,14 +715,14 @@ Tombloo.Service.extractors = new Repository([
 		},
 		getFinalUrl : function(url, retryCount){
 			retryCount = retryCount || 0;
-			
+
 			var self = this;
 			if(!this.isOriginalUrl(url))
 				return succeed(url);
-			
+
 			if(retryCount > 5)
 				throw 'Kiva: retry over.';
-				
+
 			return getFinalUrl(url).addBoth(function(url){
 				return (retryCount? wait(3) : succeed()).addCallback(function(){
 					return self.getFinalUrl(url, ++retryCount);
@@ -730,13 +730,13 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - 4u',
 		ICON : models['4u'].ICON,
 		check : function(ctx){
-			return ctx.onImage && 
-				ctx.href.match('^http://4u.straightline.jp/image/') && 
+			return ctx.onImage &&
+				ctx.href.match('^http://4u.straightline.jp/image/') &&
 				ctx.target.src.match('/static/upload/l/l_');
 		},
 		extract : function(ctx){
@@ -755,7 +755,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Photo - We Heart It',
 		ICON : models.WeHeartIt.ICON,
@@ -779,7 +779,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Photo - Snipshot',
 		ICON : models.Snipshot.ICON,
@@ -789,7 +789,7 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			var id = ctx.window.m ? ctx.window.m.id : ctx.window.snipshot.FILE;
 			var info = ctx.window.SnipshotImport;
-			
+
 			if(info){
 				ctx.href  = info.url;
 				ctx.title = info.title;
@@ -797,7 +797,7 @@ Tombloo.Service.extractors = new Repository([
 				ctx.href  = '';
 				ctx.title = '';
 			}
-			
+
 			return {
 				type    : 'photo',
 				item    : ctx.title,
@@ -805,7 +805,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Fishki.Net',
 		ICON : 'http://de.fishki.net/favicon.ico',
@@ -821,7 +821,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - BRIGIT',
 		ICON : 'http://brigit.jp/img/favicon.gif',
@@ -836,7 +836,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Google',
 		ICON : models.Google.ICON,
@@ -853,7 +853,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - 1101.com/ajisha',
 		ICON : 'http://www.1101.com/favicon.ico',
@@ -865,12 +865,12 @@ Tombloo.Service.extractors = new Repository([
 				type      : 'photo',
 				item      : ctx.title,
 				itemUrl   : ctx.link.href.replace(
-					new RegExp('http://www.1101.com/ajisha/p_(.+).html'), 
+					new RegExp('http://www.1101.com/ajisha/p_(.+).html'),
 					'http://www.1101.com/ajisha/photo/p_$1_z.jpg'),
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Picasa',
 		ICON : 'http://picasaweb.google.com/favicon.ico',
@@ -888,7 +888,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Picoolio.co.uk',
 		ICON : 'chrome://tombloo/skin/item.ico',
@@ -904,7 +904,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - webshots',
 		ICON : 'http://www.webshots.com/favicon.ico',
@@ -925,7 +925,7 @@ Tombloo.Service.extractors = new Repository([
 			return $x('(//img[@class="user-photo"])[1]/ancestor::a');
 		},
 	},
-	
+
 	{
 		name : 'Photo - Blogger',
 		ICON : 'https://www.blogger.com/favicon.ico',
@@ -942,7 +942,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Shorpy',
 		ICON : 'http://www.shorpy.com/favicon.ico',
@@ -958,7 +958,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - FFFFOUND!',
 		ICON : models.FFFFOUND.ICON,
@@ -973,21 +973,21 @@ Tombloo.Service.extractors = new Repository([
 				var d = request(ctx.link.href).addCallback(function(res){
 					// 相対パスを処理するためdocumentを渡す
 					var doc = convertToHTMLDocument(res.responseText, ctx.document);
-					
+
 					ctx.href = ctx.link.href;
 					ctx.target = $x('(//img[starts-with(@id, "asset")])', doc);
-					
+
 					return doc;
 				})
 			}
-			
+
 			d.addCallback(function(doc){
 				var author = $x('//div[@class="saved_by"]/a[1]', doc);
 				ctx.title = $x('//title/text()', doc) || '';
-				
+
 				var uri = createURI(ctx.href);
 				ctx.href = uri.prePath + uri.filePath;
-				
+
 				return {
 					type      : 'photo',
 					item      : $x('//div[@class="title"]/a/text()', doc).trim(),
@@ -1000,11 +1000,11 @@ Tombloo.Service.extractors = new Repository([
 					},
 				}
 			});
-			
+
 			return d;
 		},
 	},
-	
+
 	{
 		name : 'Photo - Google Image Search',
 		ICON : models.Google.ICON,
@@ -1016,12 +1016,12 @@ Tombloo.Service.extractors = new Repository([
 			var link  = $x('parent::a/@href', ctx.target);
 			var itemUrl = decodeURIComponent(link.match(/imgurl=([^&]+)/)[1]);
 			ctx.href = decodeURIComponent(link.match(/imgrefurl=([^&]+)/)[1]);
-			
+
 			return request(ctx.href).addCallback(function(res){
 				ctx.title =
 					res.responseText.extract(/<title.*?>([\s\S]*?)<\/title>/im).replace(/[\n\r]/g, '').trim() ||
 					createURI(itemUrl).fileName;
-				
+
 				return {
 					type    : 'photo',
 					item    : ctx.title,
@@ -1030,7 +1030,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - Frostdesign.net',
 		ICON : 'http://mfrost.typepad.com/favicon.ico',
@@ -1045,14 +1045,14 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - MediaWiki Thumbnail',
 		ICON : 'http://www.mediawiki.org/favicon.ico',
 		check : function(ctx){
-			return ctx.onLink && 
-				hasElementClass(ctx.document.body, 'mediawiki') && 
-				/wiki\/.+:/.test(ctx.link.href) && 
+			return ctx.onLink &&
+				hasElementClass(ctx.document.body, 'mediawiki') &&
+				/wiki\/.+:/.test(ctx.link.href) &&
 				(/\.(svg|png|gif|jpe?g)$/i).test(ctx.link.href);
 		},
 		extract : function(ctx){
@@ -1061,7 +1061,7 @@ Tombloo.Service.extractors = new Repository([
 				var xpath = (/\.svg$/i).test(ctx.link.href)?
 					'id("file")/a/img/@src':
 					'id("file")/a/@href';
-				
+
 				return {
 					type	  : 'photo',
 					item	  : ctx.title,
@@ -1070,7 +1070,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		}
 	},
-	
+
 	{
 		name : 'Photo - ITmedia',
 		ICON : 'http://www.itmedia.co.jp/favicon.ico',
@@ -1084,7 +1084,7 @@ Tombloo.Service.extractors = new Repository([
 			return Tombloo.Service.extractors['Photo - Upload from Cache'].extract(ctx);
 		}
 	},
-	
+
 	{
 		name : 'Photo - There, I Fixed It',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1106,7 +1106,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - Tabelog',
 		ICON : 'http://r.tabelog.com/favicon.ico',
@@ -1121,7 +1121,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - Lightbox',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1144,20 +1144,20 @@ Tombloo.Service.extractors = new Repository([
 			return {
 				type    : 'photo',
 				item    : ctx.title,
-				itemUrl : (img instanceof Ci.nsIDOMHTMLImageElement)? 
-					img.src : 
+				itemUrl : (img instanceof Ci.nsIDOMHTMLImageElement)?
+					img.src :
 					resolveRelativePath(img.style.backgroundImage.extract(/\([" ]*([^"]+)/), ctx.href),
 			}
 		}
 	},
-	
+
 	{
 		name : 'Photo - covered',
 		ICON : 'chrome://tombloo/skin/photo.png',
 		check : function(ctx){
 			if(!currentDocument().elementFromPoint || !ctx.onImage)
 				return;
-			
+
 			// 1px四方の画像の上でクリックされたか?
 			// FIXME: naturalHeight利用
 			var img = IMG({src : ctx.target.src});
@@ -1165,13 +1165,13 @@ Tombloo.Service.extractors = new Repository([
 		},
 		extract : function(ctx){
 			removeElement(ctx.target);
-			
+
 			return Tombloo.Service.extractors[ctx.bgImageURL?
 				'Photo - background image' :
 				'Photo - area element'].extract(ctx);
 		},
 	},
-	
+
 	{
 		name : 'Photo - area element',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1188,14 +1188,14 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Photo - image link',
 		ICON : 'chrome://tombloo/skin/photo.png',
 		check : function(ctx){
 			if(!ctx.onLink)
 				return;
-			
+
 			var uri = createURI(ctx.link.href);
 			return uri && (/(png|gif|jpe?g)$/i).test(uri.fileExtension);
 		},
@@ -1203,11 +1203,11 @@ Tombloo.Service.extractors = new Repository([
 			ctx.target = {
 				src : ctx.link.href
 			};
-			
+
 			return Tombloo.Service.extractors['Photo'].extract(ctx);
 		},
 	},
-	
+
 	{
 		name : 'Photo - Data URI',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1225,7 +1225,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - Canvas',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1236,7 +1236,7 @@ Tombloo.Service.extractors = new Repository([
 			return Tombloo.Service.extractors['Photo - Data URI'].extract(ctx);
 		},
 	},
-	
+
 	{
 		name : 'Photo',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1261,16 +1261,16 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			var target = ctx.target;
 			var itemUrl = (tagName(target)=='object')? target.data : target.src;
-			
+
 			if(this.PROTECTED_SITES.some(function(re){
 				return RegExp(re).test(itemUrl);
 			})){
 				return Tombloo.Service.extractors['Photo - Upload from Cache'].extract(ctx);
 			};
-			
+
 			if(ctx.document.contentType.match(/^image/))
 				ctx.title = ctx.href.split('/').pop();
-			
+
 			// ポスト先のサービスがリダイレクトを処理できずエラーになることがあるため必ずチェックをする(テスト中)
 			return getFinalUrl(itemUrl).addCallback(function(url){
 				return {
@@ -1281,7 +1281,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Photo - Upload from Cache',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1291,10 +1291,10 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			if(ctx.document.contentType.match(/^image/))
 				ctx.title = ctx.href.split('/').pop();
-			
+
 			var target = ctx.target;
 			var itemUrl = (tagName(target)=='object')? target.data : target.src;
-			
+
 			var uri = createURI(itemUrl);
 			return download(itemUrl, getTempDir()).addCallback(function(file){
 				return {
@@ -1306,7 +1306,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		},
 	},
-	
+
 	{
 		name : 'Video - Vimeo',
 		ICON : 'http://vimeo.com/favicon.ico',
@@ -1324,7 +1324,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Video - YouTube',
 		ICON : 'http://youtube.com/favicon.ico',
@@ -1333,23 +1333,23 @@ Tombloo.Service.extractors = new Repository([
 		},
 		extract : function(ctx){
 			ctx.title = ctx.title.replace(/[\n\r\t]+/gm, ' ').trim();
-			
+
 			var ps = {
 				type      : 'video',
 				item      : $x('//meta[@property="og:title"]/@content') || ctx.title.extract(/(.*) - /),
 				itemUrl   : ctx.href,
 			}
-			
+
 			var elmAuthor = $x('id("watch-username")');
 			if(elmAuthor){
 				ps.authorUrl = elmAuthor.href;
 				ps.author = elmAuthor.textContent;
 			}
-			
+
 			return ps;
 		},
 	},
-	
+
 	{
 		name : 'Video - Google Video',
 		ICON : models.Google.ICON,
@@ -1365,7 +1365,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Video - MySpaceTV',
 		ICON : 'http://vids.myspace.com/favicon.ico',
@@ -1375,7 +1375,7 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			var tag = this.getTag();
 			ctx.href = tag.extract(/href="(.+?)"/);
-			
+
 			return {
 				type    : 'video',
 				item    : tag.extract(/<a.+?>(.+?)<\/a>/),
@@ -1387,7 +1387,7 @@ Tombloo.Service.extractors = new Repository([
 			return $x('id("tv_embedcode_embed_text")/@value');
 		},
 	},
-	
+
 	{
 		name : 'Video - Dailymotion',
 		ICON : 'http://www.dailymotion.com/favicon.ico',
@@ -1397,7 +1397,7 @@ Tombloo.Service.extractors = new Repository([
 		extract : function(ctx){
 			var tag = this.getTag();
 			ctx.href = tag.extract(/href="(.+?)"/);
-			
+
 			return {
 				type    : 'video',
 				item    : ctx.title.extract(/Dailymotion - (.*?) - /),
@@ -1409,7 +1409,7 @@ Tombloo.Service.extractors = new Repository([
 			return $x('id("video_player_embed_code_text")/@value');
 		},
 	},
-	
+
 	{
 		name : 'Video - Nico Nico Douga',
 		ICON : models.Nicovideo.ICON,
@@ -1429,7 +1429,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		}
 	},
-	
+
 	{
 		name : 'Quote',
 		ICON : 'chrome://tombloo/skin/quote.png',
@@ -1445,7 +1445,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		},
 	},
-	
+
 	{
 		name : 'Link - trim parameters',
 		ICON : 'chrome://tombloo/skin/link.png',
@@ -1463,7 +1463,7 @@ Tombloo.Service.extractors = new Repository([
 			return Tombloo.Service.extractors.Link.extract(ctx);
 		},
 	},
-	
+
 	{
 		name : 'Link - link',
 		ICON : 'chrome://tombloo/skin/link.png',
@@ -1475,7 +1475,7 @@ Tombloo.Service.extractors = new Repository([
 			var title = convertToPlainText(ctx.link) || ctx.link.title;
 			if(!title || title==ctx.link.href)
 				title = ctx.title;
-			
+
 			return {
 				type    : 'link',
 				item    : title,
@@ -1483,7 +1483,7 @@ Tombloo.Service.extractors = new Repository([
 			};
 		},
 	},
-	
+
 	{
 		name : 'Link',
 		ICON : 'chrome://tombloo/skin/link.png',
@@ -1497,7 +1497,7 @@ Tombloo.Service.extractors = new Repository([
 				var title = ctx.target.textContent;
 				if(!title || title==ctx.target.href)
 					title = ctx.title;
-				
+
 				ps = {
 					type    : 'link',
 					item    : title,
@@ -1510,14 +1510,14 @@ Tombloo.Service.extractors = new Repository([
 					itemUrl : ctx.href,
 				}
 			}
-			
+
 			if(ctx.date)
 				ps.date = ctx.date;
-			
+
 			return ps;
 		},
 	},
-	
+
 	{
 		name : 'Photo - background image',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1532,7 +1532,7 @@ Tombloo.Service.extractors = new Repository([
 			}
 		}
 	},
-	
+
 	{
 		name : 'Photo - Capture',
 		ICON : 'chrome://tombloo/skin/photo.png',
@@ -1544,7 +1544,7 @@ Tombloo.Service.extractors = new Repository([
 			var type = ctx.captureType || input({'Capture Type' : ['Region', 'Element', 'View', 'Page']});
 			if(!type)
 				return;
-			
+
 			var win = ctx.window;
 			return succeed().addCallback(function(){
 				switch (type){
@@ -1552,16 +1552,16 @@ Tombloo.Service.extractors = new Repository([
 					return selectRegion().addCallback(function(region){
 						return capture(win, region.position, region.dimensions);
 					});
-				
+
 				case 'Element':
 					return selectElement().addCallback(function(elm){
 						// getBoundingClientRectで少数が返され切り取り範囲がずれるため丸める
 						return capture(win, roundPosition(getElementPosition(elm)), getElementDimensions(elm));
 					});
-				
+
 				case 'View':
 					return capture(win, getViewportPosition(), getViewDimensions());
-				
+
 				case 'Page':
 					return capture(win, {x:0, y:0}, getPageDimensions());
 				}
@@ -1576,7 +1576,7 @@ Tombloo.Service.extractors = new Repository([
 			});
 		}
 	},
-	
+
 	{
 		name : 'Text',
 		ICON : 'chrome://tombloo/skin/text.png',
@@ -1603,20 +1603,20 @@ update(Tombloo.Service.extractors, {
 	].map(function(re){
 		return RegExp(re);
 	}),
-	
+
 	normalizeUrl : function(url){
-		return (!url || !this.REDIRECT_URLS.some(function(re){return re.test(url)}))? 
-			succeed(url) : 
+		return (!url || !this.REDIRECT_URLS.some(function(re){return re.test(url)}))?
+			succeed(url) :
 			getFinalUrl(url).addErrback(function(err){
 				// bit.lyの統計ページなどHEAD取得未対応ページから返されるエラーを回避する
 				return url;
 			});
 	},
-	
+
 	extract : function(ctx, ext){
 		var doc = ctx.document;
 		var self = this;
-		
+
 		// ドキュメントタイトルを取得する
 		var title;
 		if(typeof(doc.title) == 'string'){
@@ -1625,25 +1625,25 @@ update(Tombloo.Service.extractors, {
 			// idがtitleの要素を回避する
 			title = $x('//title/text()', doc);
 		}
-		
+
 		if(!title)
 			title = createURI(doc.location.href).fileBaseName;
-		
+
 		ctx.title = title.trim();
-		
+
 		// canonicalが設定されていれば使う
 		var canonical = $x('//link[@rel="canonical"]/@href', doc);
 		if(canonical && !new RegExp(getPref('ignoreCanonical')).test(ctx.href))
 			ctx.href = resolveRelativePath(canonical, ctx.href);
 		ctx.href = ctx.href.replace(/\/#!\//, '/');
-		
+
 		return withWindow(ctx.window, function(){
 			return maybeDeferred(ext.extract(ctx)).addCallback(function(ps){
 				ps = update({
 					page    : ctx.title,
 					pageUrl : ctx.href,
 				}, ps);
-				
+
 				return self.normalizeUrl(ps.itemUrl).addCallback(function(url){
 					ps.itemUrl = url;
 					return ps;

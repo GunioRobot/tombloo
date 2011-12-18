@@ -5,10 +5,10 @@ Tumblr.getTumblelogs().addCallback(function(blogs){
 		addBefore(model, 'appendTags', function(form, ps){
 			form.channel_id = blog.id;
 		});
-		
+
 		// アカウント切り換えに表示されないように
 		delete model.getPasswords;
-		
+
 		models.register(model, 'Tumblr', true);
 	});
 });

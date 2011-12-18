@@ -14,19 +14,19 @@
 <script type="text/javascript">
 try {
 	// chrome://tombloo/content/test/test_MochiKit.html
-	
+
 	var callback = function(a, b){
 		alert(a);
 		alert(b);
 	}
-	
+
 	var d = new Deferred(function(){
 		alert('CANCELED');
 	})
-	
+
 	d.addCallback(function(value){
 		alert('A' + value);
-		
+
 		var d = new Deferred(function(){
 			alert('CANCELED - A');
 		});
@@ -37,7 +37,7 @@ try {
 	});
 	d.addCallback(function(value){
 		alert('B' + value);
-		
+
 		var d = new Deferred();
 		d.canceller = function(){
 			alert('CANCELED - B');
@@ -50,7 +50,7 @@ try {
 	});
 	d.addCallback(callback, 100);
 	d.callback(1);
-	
+
 } catch (err) {
 	var s = [];
 	s.push('TEST SUITE FAILURE!');

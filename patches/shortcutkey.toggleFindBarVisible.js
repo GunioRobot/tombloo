@@ -7,9 +7,9 @@ let(initialized){
 				initialized = true;
 				return;
 			}
-			
+
 			cancel(e);
-			
+
 			with(getMostRecentWindow()){
 				var bar = document.getElementById('FindToolbar');
 				if(bar.close){

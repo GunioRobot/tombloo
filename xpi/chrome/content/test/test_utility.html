@@ -26,16 +26,16 @@
 <script type="text/javascript; version=1.8">
 try {
 	// chrome://tombloo/content/test/test_utility.html
-	
-	
+
+
 	// convertToHTMLString
 	is(convertToHTMLString(document.getElementsByTagName('option')[0]), '<option value="1">A</option>');
-	
+
 	var html = convertToHTMLString(document.body.parentNode, true);
 	ok(!/<script/.test(html), 'スクリプトが取り除かれているか');
 	ok(!/onclick/.test(html), 'スクリプトが取り除かれているか');
-	
-	
+
+
 	// toRoma
 	is('アイウエオ'.toRoma(), 'aiueo');
 	is('ファイル'.toRoma(), 'fairu');
@@ -45,20 +45,20 @@ try {
 	is('あっち'.toRoma(), 'acchi');
 	is('あとでJavaScriptを読む'.toRoma(), 'atodeJavaScriptwo読mu');
 	is('webせいさく'.toRoma(), 'webseisaku');
-	
-	
+
+
 	// extract
 	is('abcdefg'.extract(/bc(de)/), 'de');
 	is('abcdefg'.extract(/(bc(de))/, 2), 'de');
 	is('abcdefg'.extract(/bc(de)(fg)/, 2), 'fg');
-	
-	
+
+
 	CONNECT_TEST = false;
-	
+
 	if(CONNECT_TEST){
 		var d = succeed();
 		SimpleTest.waitForExplicitFinish();
-		
+
 		// request
 		d.addCallback(function(){
 			return request('http://www.google.com/');
@@ -67,7 +67,7 @@ try {
 			is(res.status, 200);
 			ok(res.responseText);
 		});
-		
+
 		d.addCallback(function(){
 			return request('http://httpstat.us/200', {
 				referrer : 'http://httpstat.us/',
@@ -79,11 +79,11 @@ try {
 				},
 			});
 		});
-		
+
 		d.addCallback(function(res){
 			is(res.status, 200);
 		});
-		
+
 		// 文字化けテスト(日本Googleへ接続)
 		d.addCallback(function(){
 			return request('http://www.google.co.jp/').addCallback(function(res){
@@ -97,7 +97,7 @@ try {
 				is(err.message.status, 404, '失敗リクエスト');
 			});
 		});
-		
+
 		// download
 		d.addCallback(function(){
 			return download('http://www.google.com/favicon.ico');
@@ -108,7 +108,7 @@ try {
 			ok(file.exists(), 'ダウンロード先を省略してダウンロードが可能か');
 			file.remove(false);
 		});
-		
+
 		d.addErrback(function(e){
 			log(e)
 			ok(false);
@@ -117,15 +117,15 @@ try {
 			SimpleTest.finish()
 		});
 	}
-	
+
 	is('hello world'.md5(), '5eb63bbbe01eeed093cb22bb8f5acdc3');
-	
+
 	// resolveRelativePath
 	is(resolveRelativePath('/fuba', 'http://twitter.com/fuba/status/1234'), 'http://twitter.com/fuba')
 	is(resolveRelativePath('./3456', 'http://twitter.com/fuba/status/1234'), 'http://twitter.com/fuba/status/3456')
 	is(resolveRelativePath('../favorites', 'http://twitter.com/fuba/status/1234'), 'http://twitter.com/fuba/favorites')
 	is(resolveRelativePath('http://google.com/', 'http://twitter.com/fuba/status/1234'), 'http://google.com/')
-	
+
 	// Firebug無効時はエラーコンソールに出力
 	log('LOG TEST');
 	warn('WARN TEST');
@@ -134,19 +134,19 @@ try {
 	} catch(e){
 		error(e);
 	}
-	
+
 	// queryString
 	is(queryString({a:5}), 'a=5');
 	is(queryString({a:5}), 'a=5');
 	is(queryString('a=5'), 'a=5');
 	is(queryString({a:void(0)}), '');
 	is(queryString({a:[1,2,3]}), 'a=1&a=2&a=3');
-	
+
 	setPref('test_string', 'あいうえお');
 	is(getPref('test_string'), 'あいうえお');
-	
+
 	ok(isEmpty(clearObject({a:1, b:''})));
-	
+
 	// フォーム
 	populateForm($('form'), {
 		text : 'TEXT',
@@ -158,47 +158,47 @@ try {
 	is($('hidden').value, 'hidden');
 	is($('select').value, '2');
 	is($('checkbox').checked, true);
-	
+
 	var f = formContents();
 	is(f.text, 'TEXT');
 	is(f.hidden, 'hidden');
 	is(f.select, '2');
 	is(f.checkbox, 'on');
-	
+
 	// String
 	is(' A '.trim(), 'A');
 	is('\n \t A\nB\n \n'.trim(), 'A\nB');
-	
+
 	ok(! 'ABC,DEF.[]/"()'.includesFullwidth());
 	ok(  '"あいう","あとで読む"'.includesFullwidth());
-	
+
 	is('1'.pad(3, '0'), '001');
 	is('1234'.pad(3, '0'), '1234');
-	
-	
+
+
 	// SimpleEnumerator Iterator
 	var dir = getProfileDir();
 	ok(dir.exists());
 	ok(list(dir.directoryEntries).length > 3);
-	
-	
+
+
 	// XML Iterator
 	var xml = <a><b/><b/><b/></a>;
 	is(list(xml.b).length, 3);
 	is(typeof(list(xml.b)[2]), 'xml');
-	
-	
+
+
 	// Object Iterator
 	ok(arrayEqual(
 		list({a:1, b:2}),
 		[['a', 1], ['b', 2]]));
-	
-	
+
+
 	// Array.prototype.split
 	ok(arrayEqual(
-		[0,1,2,3,4].split(2), 
+		[0,1,2,3,4].split(2),
 		[[0, 1], [2, 3], [4]]));
-	
+
 	// deferredForEach
 	var flag = false;
 	deferredForEach([], function(){
@@ -208,7 +208,7 @@ try {
 		flag=true;
 	});
 	ok(flag, 'deferredForEach: 全リストが処理されコールバックされるか(同期前提)');
-	
+
 	var flag = false;
 	deferredForEach([1], function(item, index){
 		is(item, 1, 'deferredForEach: アイテムが渡されるか');
@@ -218,7 +218,7 @@ try {
 		flag=true;
 	});
 	ok(flag);
-	
+
 	var arr = [];
 	deferredForEach(range(10), function(item){arr.push(item)}).
 	addErrback(function(){
@@ -226,7 +226,7 @@ try {
 	});
 	is(arr.length, 10);
 	is(arr[9], 9);
-	
+
 	var result;
 	deferredForEach(range(10), function(item, index){
 		result = item;
@@ -237,7 +237,7 @@ try {
 		ok(false, 'deferredForEach: 途中終了時にエラーが起きないこと');
 	});
 	is(result, 3, 'deferredForEach: 途中終了されているか');
-	
+
 	var result;
 	deferredForEach(range(10), function(item, index){
 		throw 'ERROR';
@@ -246,7 +246,7 @@ try {
 		result = e.message;
 	});
 	is(result, 'ERROR', 'deferredForEach: エラー等をキャッチできるか')
-	
+
 	// DeferredHash
 	var l = new DeferredHash({
 		s : succeed('SUCCEED'),
@@ -254,51 +254,51 @@ try {
 	}).addCallback(function (res) {
 		is(res.s[0], true);
 		is(res.s[1], 'SUCCEED');
-		
+
 		is(res.f[0], false);
 		is(res.f[1].message, 'FAIL');
 	});
-	
+
 	// 正規表現 / エラーメッセージのフィルタ
 	function block  (error, re){ok(error.match(re))};
 	function through(error, re){ok(! error.match(re))};
 	var re;
-	
+
 	re = /F:/;
 	block  ('F:TOO' , re);
 	block  ('F:AUTH', re);
-	
+
 	re = /F:(?!AUTH)/;
 	through('F:AUTH', re);
 	block  ('F:TOO',  re);
-	
+
 	re = /F:(?!AUTH|TOO)/;
 	through('F:TOO',  re);
 	through('F:AUTH', re);
 	block  ('F:You',  re);
-	
+
 	re = /(F:(?!AUTH|TOO)|T:)/;
 	through('F:TOO',  re);
 	block  ('T:Post', re);
 	block  ('T:You',  re);
-	
+
 	re = '(F:(?!AUTH|TOO)|T:(Post))';
 	through('F:TOO',  re);
 	block  ('T:Post', re);
 	through('T:You',  re);
-	
-	
+
+
 	is('<a href="http://"><b>ABC</b></a>'.trimTag(), 'ABC');
 	is(joinText(['<a href="http://">ABC</a>', null, 'DEF', window.undefined], ' ', true), 'ABC DEF');
 	is(joinText(['1', '2']), '1,2');
 	is(joinText(['1'], ' ', true), '1');
 	is(joinText([null, '', null], ' ', true), '', 'joinText: 空文字とnullが除外されているか');
-	
-	
+
+
 	// Repository
 	var repo = new Repository();
 	ok(isEmpty(repo.copyTo({})));
-	
+
 	var repo = new Repository({
 		name  : 'ABC',
 		check : function(c1, c2){
@@ -315,7 +315,7 @@ try {
 	is(repo.find('ZZZ').length, 0);
 	is(repo.check(6).length, 0);
 	is(repo.check(4).length, 1);
-	
+
 	repo.register([{
 		name  : 'ABC',
 		check : function(c1, c2){
@@ -335,7 +335,7 @@ try {
 	is(repo.check(0)[0].name, 'ABC', '順序が保たれているか');
 	is(repo.find('A|D').length, 2);
 	is(repo.find(/A|D/).length, 2);
-	
+
 	repo.extract = function(){};
 	repo.register({
 		name  : 'GHI',
@@ -343,10 +343,10 @@ try {
 	}, 'DEF');
 	is(repo.names.join(), 'ABC,GHI,DEF', '途中に追加できるか');
 	ok(repo.extract, '定義以外のデータが消えないか');
-	
-	
+
+
 	ok(getDataDir().exists(), 'データディレクトリが存在するか');
-	
+
 	var event = document.createEvent('KeyboardEvent');
 	event.initKeyEvent('keydown', true, true, null,
 		true,  //  ctrl,
@@ -361,15 +361,15 @@ try {
 		cancel(e);
 		log(keyString(e));
 	}, true);
-	
+
 	// Cookie
 	ok(getCookies('www.tumblr.com').length > 2, 'Tumblrのログイン情報取得(未ログインの場合エラー)');
 	ok(getCookieString('delicious.com', '_user'), 'deliciousのユーザー文字列取得(未ログインの場合エラー)');
-	
+
 	// Password
 	ok(getPasswords('http://www.tumblr.com').length, 'Tumblrの保存パスワード(未保存の場合エラー)');
-	
-	
+
+
 	// アスペクト
 	function Cat(name){
 		this.name = name;
@@ -380,13 +380,13 @@ try {
 	var cat = new Cat('TAMA');
 	var _mew = Cat.prototype.mew; // オリジナルメソッドを保存
 	is(cat.mew('taro'), 'TAMA : taro MEW!!');
-	
+
 	addAround(Cat.prototype, 'mew', function(proceed, args, target, methodName){
 		return proceed(args);
 	});
 	is(cat.mew.overwrite, 1);
 	is(cat.mew('taro'), 'TAMA : taro MEW!!', 'ノーマルなアスペクト追加');
-	
+
 	addAround(Cat.prototype, 'mew', function(proceed, args, target, methodName){
 		is(methodName, 'mew');
 		args[0] = args[0] + ' san';
@@ -394,26 +394,26 @@ try {
 	});
 	is(cat.mew.overwrite, 2);
 	is(cat.mew('taro'), '[TAMA : taro san MEW!!]', '多重アスペクト、引数と返り値の変形');
-	
+
 	Cat.prototype.mew = _mew;
 	ok(cat.mew.overwrite == null, 'アスペクトの除去');
-	
-	
+
+
 	// getMessage
 	is(getMessage('label.action.tomblooOptions'), 'Tomblooの設定');
-	
-	
+
+
 	// connected
 	var obj = {};
 	connect(obj, 'load', function(){});
 	ok(connected(obj, 'load'));
-	
+
 	connect(obj, 'load', function(){});
 	ok(connected(obj, 'load'));
-	
+
 	disconnectAll(obj);
 	ok(!connected(obj, 'load'));
-	
+
 	// extend
 	var src = {
 		_name : '',
@@ -429,27 +429,27 @@ try {
 	is(target.name = 'NAME', 'NAME');
 	is(target.name, 'NAME');
 	is(target.value, 0, 'extend: 上書きされないか');
-	
+
 	// E
 	var elm = TREECOL({
 		class : 'test',
-		style : 'display:none', 
+		style : 'display:none',
 	});
 	is(tagName(elm), 'treecol');
 	is(elm.style.display, 'none');
 	is(elm.className, 'test');
-	
+
 	// createDir
 	var dir = createDir('tombloo_test/c1', getDownloadDir());
 	ok(dir.exists(), '複数階層のディレクトリが作成されているか');
 	dir.parent.remove(true);
-	
+
 	// getAllPropertyNames(Firefox 6でErrorのmessageを列挙できるか?)
 	ok(getAllPropertyNames(new Error(), Object.prototype).indexOf('message') != 0);
-	
+
 } catch (err) {
 	error(err);
-	
+
 	var s = [];
 	s.push('TEST SUITE FAILURE!');
 	for(var prop in err)

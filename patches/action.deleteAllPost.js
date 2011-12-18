@@ -7,23 +7,23 @@ Tombloo.Service.actions.register(	{
 		d.addCallback(function(id){
 			if(prompt('Spell your id.: ' + id) != id)
 				return d.cancel();
-			
+
 			openProgressDialog(p);
 			return id;
 		});
 		d.addCallback(bind('getInfo', Tumblr));
 		d.addCallback(function(info){
 			p.max = info.total;
-			
+
 			return Tumblr.read(info.name, null, info.total);
 		});
 		d.addCallback(function(posts){
 			return deferredForEach(posts, function(post){
 				if(p.canceled)
 					throw StopProcess;
-				
+
 				p.value++;
-				
+
 				return Tumblr.remove(post.id);
 			});
 		});

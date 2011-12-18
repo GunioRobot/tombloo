@@ -8,7 +8,7 @@ Tombloo.Service.actions.register({
 				return mem;
 			}, vals.split(2), {add:[], sub:[]});
 		}
-		
+
 		var params = values(input({'Formula: e.g.(a + b - c)' : '', 'Random' : true}));
 		if(!params.length)
 			return;
@@ -17,26 +17,26 @@ Tombloo.Service.actions.register({
 		var sql = [];
 		sql.push(Entity.compactSQL(<>
 			SELECT *
-			FROM 
+			FROM
 				photos
-			WHERE 
+			WHERE
 				user IN ({users.add.join(',')})
-		</>)); 
+		</>));
 		if(users.sub.length){
 			sql.push(Entity.compactSQL(<>
 				AND imageId NOT IN (
-					SELECT 
+					SELECT
 						imageId
-					FROM 
+					FROM
 						photos
-					WHERE 
+					WHERE
 						user IN ({users.sub.join(',')})
 				)
 			</>));
 		}
 		sql.push('ORDER BY ' + (params[1]? 'random()' : 'date DESC'));
 		sql.push('LIMIT 1000');
-		
+
 		addTab('chrome://tombloo/content/library/Mosaic.html?' + queryString({
 			query : sql.join(' '),
 		}));

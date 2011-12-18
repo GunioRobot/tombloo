@@ -142,10 +142,10 @@ var MultiplexInputStream =
 		streams.forEach(function(stream){
 			if(stream.join)
 				stream = stream.join('\r\n');
-			
+
 			if(typeof(stream)=='string')
 				stream = new StringInputStream(stream + '\r\n');
-			
+
 			self.appendStream(stream);
 		});
 	});
@@ -180,22 +180,22 @@ update(DocumentEncoder, Ci.nsIDocumentEncoder);
 function createMock(sample, proto){
 	var non = function(){};
 	sample = typeof(sample)=='object'? sample : Cc[sample].createInstance();
-	
+
 	var ifcs = getInterfaces(sample);
 	var Mock = function(){};
-	
+
 	for(var key in sample){
 		try{
 			if(sample.__lookupGetter__(key))
 				continue;
-			
+
 			var val = sample[key];
 			switch (typeof(val)){
 			case 'number':
 			case 'string':
 				Mock.prototype[key] = val;
 				continue;
-			
+
 			case 'function':
 				Mock.prototype[key] = non;
 				continue;
@@ -204,13 +204,13 @@ function createMock(sample, proto){
 			// コンポーネント実装により発生するプロパティ取得エラーを無視する
 		}
 	}
-	
+
 	Mock.prototype.QueryInterface = createQueryInterface(ifcs);
-	
+
 	// FIXME: extendに変える(アクセサをコピーできない)
 	update(Mock.prototype, proto);
 	update(Mock, Mock.prototype);
-	
+
 	return Mock;
 }
 
@@ -218,14 +218,14 @@ function createQueryInterface(ifcNames){
 	var ifcs = ['nsISupports'].concat(ifcNames).map(function(ifcName){
 		return Ci[''+ifcName];
 	});
-	
+
 	return function(iid){
 		if(ifcs.some(function(ifc){
 			return iid.equals(ifc);
 		})){
 			return this;
 		}
-		
+
 		throw Components.results.NS_NOINTERFACE;
 	}
 }
@@ -244,7 +244,7 @@ function createQueryInterface(ifcNames){
 function createConstructor(clsName, ifc, init){
 	var cls = Components.classes['@mozilla.org' + clsName];
 	ifc = typeof(ifc)=='string'? Components.interfaces[ifc] : ifc;
-	
+
 	var cons = function(){
 		var obj = cls.createInstance(ifc);
 		if(init){
@@ -256,14 +256,14 @@ function createConstructor(clsName, ifc, init){
 		}
 		return obj;
 	};
-	
+
 	cons.instanceOf = function(obj){
 		return (obj instanceof ifc);
 	};
-	
+
 	for(var prop in ifc)
 		cons[prop] = ifc[prop];
-	
+
 	return cons;
 }
 
@@ -281,7 +281,7 @@ function defineLazyServiceGetter(obj, name, cid, ifc){
 	var cls = Cc[cid];
 	if(!cls)
 		return;
-	
+
 	obj.__defineGetter__(name, function(){
 		delete this[name];
 		try{
@@ -298,7 +298,7 @@ function defineLazyServiceGetter(obj, name, cid, ifc){
  */
 function getInterfaces(obj){
 	var result = [];
-	
+
 	for(var i=0,len=INTERFACES.length ; i<len ; i++){
 		var ifc = INTERFACES[i];
 		try {
@@ -307,7 +307,7 @@ function getInterfaces(obj){
 			}
 		} catch(e) { }
 	}
-	
+
 	return result;
 }
 
@@ -335,7 +335,7 @@ function broad(obj, ifcs){
  */
 function till(cond){
 	let thread = ThreadManager.mainThread;
-	
+
 	do{
 		thread.processNextEvent(true);
 	}while(cond && !cond());
@@ -368,16 +368,16 @@ notify.ICON_WORN     = 'chrome://global/skin/console/bullet-warning.png';
 function createURI(path){
 	if(!path)
 		return;
-	
+
 	if (path instanceof IURI) {
 		return path;
 	}
-	
+
 	try{
 		var path = (path instanceof IFile) ? path : new LocalFile(path);
 		return broad(IOService.newFileURI(path));
 	}catch(e){}
-	
+
 	try {
 		var uri = IOService.newFileURI(path, null, null);
 		uri instanceof Ci.nsIURL;
@@ -399,18 +399,18 @@ function createURI(path){
 function getLocalFile(uri){
 	if(uri instanceof ILocalFile)
 		return uri;
-	
+
 	uri = createURI(uri);
-	
+
 	if(uri.scheme == 'chrome')
 		uri = ChromeRegistry.convertChromeURL(uri);
-	
+
 	if(uri.scheme == 'jar')
 		uri = createURI(uri.spec.replace(/(^jar:|!\/$)/g, ''));
-	
+
 	if(uri.scheme != 'file')
 		return;
-	
+
 	return IOService.getProtocolHandler('file').
 		QueryInterface(Ci.nsIFileProtocolHandler).
 		getFileFromURLSpec(uri.spec).
@@ -421,7 +421,7 @@ function getLocalFile(uri){
  * 拡張のインストールされているディレクトリを取得する。
  *
  * @param {String} id 拡張ID。
- * @return {String} 
+ * @return {String}
  *         拡張のリソースディレクトリ。
  *         展開しない拡張はjarファイルが返る。
  *         拡張が見つからない場合はnullが返る。
@@ -431,7 +431,7 @@ var getExtensionDir;
 	// Firefox 4以降
 	if(typeof(ExtensionManager) == 'undefined' || !ExtensionManager){
 		Components.utils.import('resource://gre/modules/AddonManager.jsm');
-		
+
 		getExtensionDir = function(id){
 			// 最終的にXPIProvider.jsmのXPIDatabase.getVisibleAddonForIDにて
 			// statement.executeAsyncを使った問い合わせで取得される
@@ -439,11 +439,11 @@ var getExtensionDir;
 			AddonManager.getAddonByID(id, function(addon){
 				dir = (!addon)? null : getLocalFile(addon.getResourceURI('/'));
 			});
-			
+
 			till(function(){
 				return dir !== false;
 			});
-			
+
 			return dir;
 		}
 	} else {
@@ -472,7 +472,7 @@ function getPrefType(key){
 function setPrefValue(){
 	var value = Array.pop(arguments);
 	var key = Array.join(arguments, '');
-	
+
 	var prefType = getPrefType(key);
 	with(PrefBranch()){
 		switch(prefType!='undefined'? prefType : typeof(value)){
@@ -488,7 +488,7 @@ function setPrefValue(){
 
 function getPrefValue(){
 	var key = Array.join(arguments, '');
-	
+
 	with(PrefBranch()){
 		switch(getPrefType(key)){
 			case PREF_STRING:
@@ -511,7 +511,7 @@ function getDownloadDir(){
 		if(dir.exists())
 			return dir
 	} catch(e) {}
-	
+
 	return DownloadManager.userDownloadsDirectory;
 }
 
@@ -546,7 +546,7 @@ function findCacheFile(url){
 		visitEntry : function(deviceID, info){
 			if(info.key != url)
 				return true;
-			
+
 			entry = {
 				clientID    : info.clientID,
 				key         : info.key,
@@ -554,10 +554,10 @@ function findCacheFile(url){
 			};
 		},
 	});
-	
+
 	if(!entry)
 		return;
-	
+
 	try{
 		var session = CacheService.createSession(
 			entry.clientID,
@@ -568,7 +568,7 @@ function findCacheFile(url){
 			entry.key,
 			ICache.ACCESS_READ,
 			false);
-		
+
 		return descriptor.file;
 	} finally{
 		// [FIXME] copy to temp
@@ -602,10 +602,10 @@ function withStream(stream, func){
 function sanitizeHTML(html){
 	var doc = document.implementation.createDocument('', '', null);
 	var root = doc.appendChild(doc.createElement('root'));
-	
+
 	var fragment = UnescapeHTML.parseFragment(html, false, null, doc.documentElement);
 	doc.documentElement.appendChild(fragment);
-	
+
 	if(!root.childNodes.length)
 		return '';
 	return serializeToString(root).match(/^<root>(.*)<\/root>$/)[1];
@@ -629,17 +629,17 @@ function convertFromByteArray(arr, charset){
 function registerSheet(css){
 	var sss = StyleSheetService;
 	var uri = (css instanceof IURI)? css : createURI(('data:text/css,' + css).replace(/[\n\r\t ]+/g, ' '));
-	
+
 	if(!sss.sheetRegistered(uri, sss.AGENT_SHEET))
 		sss.loadAndRegisterSheet(uri, sss.AGENT_SHEET);
-	
+
 	return partial(unregisterSheet, uri);
 }
 
 function unregisterSheet(uri){
 	var sss = StyleSheetService;
 	var uri = (css instanceof IURI)? css : createURI(('data:text/css,' + css).replace(/[\n\r\t ]+/g, ' '));
-	
+
 	if(sss.sheetRegistered(uri, sss.AGENT_SHEET))
 		sss.unregisterSheet(uri, sss.AGENT_SHEET);
 }

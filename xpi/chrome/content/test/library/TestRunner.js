@@ -1,7 +1,7 @@
 /**
  * TestRunner: A test runner for SimpleTest
  * TODO:
- * 
+ *
  *  * Avoid moving iframes: That causes reloads on mozilla and opera.
  *
 **/
@@ -14,12 +14,12 @@ TestRunner._currentTest = 0;
 TestRunner._urls = [];
 TestRunner._testsDiv = DIV();
 TestRunner._progressDiv = DIV({class : 'progress'});
-TestRunner._summaryDiv = DIV(null, 
-	TABLE({class : 'tests_report', cellspacing : '0', cellpadding : '0'}, 
-		THEAD(null, 
+TestRunner._summaryDiv = DIV(null,
+	TABLE({class : 'tests_report', cellspacing : '0', cellpadding : '0'},
+		THEAD(null,
 			TR(null,
-				TH(null, "Test"), 
-				TH(null, "Passed"), 
+				TH(null, "Test"),
+				TH(null, "Passed"),
 				TH(null, "Failed")
 			)
 		),
@@ -27,7 +27,7 @@ TestRunner._summaryDiv = DIV(null,
 	)
 );
 
-var chromeWindow = 
+var chromeWindow =
 	Components.classes["@mozilla.org/appshell/window-mediator;1"].
 		getService(Components.interfaces.nsIWindowMediator).
 		getMostRecentWindow("navigator:browser");
@@ -82,7 +82,7 @@ TestRunner._makeIframe = function (url) {
 TestRunner.runTests = function (/*url...*/) {
 	if (TestRunner.logEnabled)
 		TestRunner.logger.log("SimpleTest START");
-  
+
 	var body = document.getElementsByTagName("body")[0];
 	appendChildNodes(body,
 		TestRunner._testsDiv,
@@ -90,9 +90,9 @@ TestRunner.runTests = function (/*url...*/) {
 		TestRunner._summaryDiv
 	);
 	TestRunner._summaryDiv.style.display = 'none';
-	
+
 	for (var i = 0; i < arguments.length; i++) {
-		TestRunner._urls.push(arguments[i]); 
+		TestRunner._urls.push(arguments[i]);
 	}
 	TestRunner.runNextTest();
 };
@@ -106,17 +106,17 @@ TestRunner.runNextTest = function() {
 		var progress = SPAN({class : 'running'},
 			"Running ", url, "..."
 		);
-		
+
 		if (TestRunner.logEnabled)
 			TestRunner.logger.log(scrapeText(progress));
-		
+
 		TestRunner._progressDiv.appendChild(progress);
 		TestRunner._iframes[url] = TestRunner._makeIframe(url);
 	}  else {
 		TestRunner.makeSummary();
 		TestRunner._progressDiv.style.display = 'none';
 		TestRunner._summaryDiv.style.display = '';
-		
+
 		if (TestRunner.onComplete)
 			TestRunner.onComplete();
 	}
@@ -128,10 +128,10 @@ TestRunner.runNextTest = function() {
 TestRunner.testFinished = function (doc) {
 	appendChildNodes(TestRunner._progressDiv, SPAN(null, "Done"), BR());
 	var finishedURL = TestRunner._urls[TestRunner._currentTest];
-	
+
 	if (TestRunner.logEnabled)
 		TestRunner.logger.debug("SimpleTest finished " + finishedURL);
-	
+
 	TestRunner._iframeDocuments[finishedURL] = doc;
 	TestRunner._toggle(TestRunner._iframes[finishedURL]);
 	TestRunner._currentTest++;
@@ -144,7 +144,7 @@ TestRunner.testFinished = function (doc) {
 TestRunner.makeSummary = function() {
 	if (TestRunner.logEnabled)
 		TestRunner.logger.log("SimpleTest FINISHED");
-	
+
 	for (var url in TestRunner._iframeDocuments) {
 		var doc = TestRunner._iframeDocuments[url];
 		var nOK = withDocument(doc,
@@ -155,10 +155,10 @@ TestRunner.makeSummary = function() {
 		).length;
 		var toggle = partial(TestRunner._toggle, TestRunner._iframes[url]);
 		var jsurl = "TestRunner._toggle(TestRunner._iframes['" + url + "'])";
-		
+
 		var passed = TD({class : 'passed'}, nOK);
 		var failed = TD({class : nNotOK > 0 ? 'failed' : 'passed'}, nNotOK);
-		var row = TR(null, 
+		var row = TR(null,
 			TD({class : 'url'}, A({href:url}, url)),
 			passed, failed);
 		passed.onclick = failed.onclick = toggle;
